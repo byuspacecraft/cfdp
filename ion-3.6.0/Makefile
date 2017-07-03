@@ -11,9 +11,9 @@ cfdpreqs:
 	gmake -C bp all
 	gmake -C bp install
 	echo "\n\n"
-#	gmake -C cfdp all
-#	gmake -C cfdp install
-#	echo "\n\n"
+	gmake -C cfdp all
+	gmake -C cfdp install
+	echo "\n\n"
 
 cleancfdp:
 	gmake -C ici  clean

@@ -29,7 +29,7 @@ LTPINCLS = \
 RUNTIMES = ltpadmin ltpclock ltpmeter udplsi udplso ltpdriver ltpcounter sdatest
 #dccplsi dccplso
 
-ALL = check libltp.a $(RUNTIMES)
+ALL = check libltp.a libltpP.a $(RUNTIMES)
 
 all:		$(ALL)
 
@@ -104,6 +104,11 @@ dccpplso:	dccplso.o libltp.a
 libltp.a:	libltpP.o libltp.o ltpei.o auth.o libltpnm.o libsda.o
 		$(LD) libltp.a libltp.o libltpP.o ltpei.o auth.o libltpnm.o libsda.o
 		cp libltp.a ./lib
+
+# Dallon - "Not sure if we really need libltpP"
+libltpP.a:	libltpP.o ltpei.o auth.o
+		$(LD) libltpP.a libltpP.o ltpei.o auth.o
+		cp libltpP.a ./lib
 
 #	-	-	Object modules	-	-	-	-	-
 

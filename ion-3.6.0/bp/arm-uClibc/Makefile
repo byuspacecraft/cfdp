@@ -25,7 +25,8 @@ CC = $(CROSS_COMPILE_APPS)gcc $(OPT)
 CC += -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/
 CC += -I$(IPN) -I$(IMC) -I$(DTN2) -I$(API) -I$(API)/acs -I$(API)/ext -I$(API)/ext/phn -I$(API)/ext/ecos -I$(API)/ext/meb -I$(API)/ext/bae -I$(API)/ext/bpsec -I$(API)/ext/cteb -I$(STCP) -I$(UDP) -I$(INCL) -I$(ROOT)/include -DBP_EXTENDED
 LDFLAGS = -fPIC -shared
-LD = $(TLD) $(LDFLAGS)
+LD = $(TLD) ar rcs
+PTHREADS = -L/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/lib -pthread
 
 PUBINCLS = \
 	$(INCL)/bp.h
@@ -45,7 +46,7 @@ BPINCLS = \
 	$(API)/acs/acs.h
 
 BPLIBS = \
-	libbp.so
+	libbp.a
 
 BPPOBJS = libbpP.o eureka.o bei.o phn.o ecos.o meb.o bae.o acstx.o acsrx.o acsserialize.o acsappend.o acsid.o cteb.o bpsec_util.o bpsec_instr.o profiles.o bpsec_bib.o bpsec_bcb.o
 # snid.o
@@ -56,7 +57,7 @@ LBP = -lbp -limcfw -lipnfw -ldtn2fw
 RUNTIMES = bpadmin bpsink bpsource bpdriver bpecho bpcounter bpsendfile bprecvfile bpclock bptransit bpclm ipnadmin ipnfw ipnadminep dtn2admin dtn2fw dtn2adminep tcpcli tcpclo stcpcli stcpclo brsscla brsccla udpcli udpclo dgrcli dgrclo ltpcli ltpclo lgsend lgagent bptrace bpstats bplist bpcancel hmackeys bping bpstats2 bpchat acsadmin acslist imcadmin imcfw bsspcli bsspclo bibeclo bpnmtest cgrfetch
 # dccpcli dccpclo ipnd
 
-ALL = check $(BPLIBS) libcgr.so libipnfw.so libimcfw.so libdtn2fw.so libstcpcla.so libudpcla.so $(RUNTIMES)
+ALL = check $(BPLIBS) libcgr.a libipnfw.a libimcfw.a libdtn2fw.a libstcpcla.a libudpcla.a $(RUNTIMES)
 
 all:		$(ALL)
 
@@ -80,268 +81,269 @@ install:
 #	-	-	Daemon executables	-	-	-	-
 
 bpclock:	bpclock.o $(BPLIBS)
-		$(CC) -o bpclock bpclock.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o bpclock bpclock.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bpclock ./bin
 
 bptransit:	bptransit.o $(BPLIBS)
-		$(CC) -o bptransit bptransit.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o bptransit bptransit.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bptransit ./bin
 
 bpclm:		bpclm.o $(BPLIBS)
-		$(CC) -o bpclm bpclm.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o bpclm bpclm.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bpclm ./bin
 
 #	-	-	Utility executables	-	-	-	-
 
 bpadmin:	bpadmin.o $(BPLIBS)
-		$(CC) -o bpadmin bpadmin.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o bpadmin bpadmin.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bpadmin ./bin
 
-ipnadmin:	ipnadmin.o $(BPLIBS) libipnfw.so
-		$(CC) -o ipnadmin ipnadmin.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+ipnadmin:	ipnadmin.o $(BPLIBS) libipnfw.a
+		$(CC) -o ipnadmin ipnadmin.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp ipnadmin ./bin
 
-imcadmin:	imcadmin.o $(BPLIBS) libimcfw.so
-		$(CC) -o imcadmin imcadmin.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+imcadmin:	imcadmin.o $(BPLIBS) libimcfw.a
+		$(CC) -o imcadmin imcadmin.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp imcadmin ./bin
 
-dtn2admin:	dtn2admin.o $(BPLIBS) libdtn2fw.so
-		$(CC) -o dtn2admin dtn2admin.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+dtn2admin:	dtn2admin.o $(BPLIBS) libdtn2fw.a
+		$(CC) -o dtn2admin dtn2admin.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp dtn2admin ./bin
 
 lgsend:		lgsend.o $(BPLIBS)
-		$(CC) -o lgsend lgsend.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o lgsend lgsend.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp lgsend ./bin
 
 lgagent:	lgagent.o $(BPLIBS)
-		$(CC) -o lgagent lgagent.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o lgagent lgagent.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp lgagent ./bin
 
 bptrace:	bptrace.o $(BPLIBS)
-		$(CC) -o bptrace bptrace.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o bptrace bptrace.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bptrace ./bin
 
 bpstats:	bpstats.o $(BPLIBS)
-		$(CC) -o bpstats bpstats.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o bpstats bpstats.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bpstats ./bin
 
 bpstats2:	bpstats2.o $(BPLIBS)
-		$(CC) -o bpstats2 bpstats2.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o bpstats2 bpstats2.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bpstats2 ./bin
 
 bping:		bping.o $(BPLIBS)
-		$(CC) -o bping bping.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o bping bping.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bping ./bin
 
 bpchat:		bpchat.o $(BPLIBS)
-		$(CC) -o bpchat bpchat.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o bpchat bpchat.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bpchat ./bin
 
 bplist:		bplist.o $(BPLIBS)
-		$(CC) -o bplist bplist.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o bplist bplist.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bplist ./bin
 
 bpcancel:	bpcancel.o $(BPLIBS)
-		$(CC) -o bpcancel bpcancel.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o bpcancel bpcancel.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bpcancel ./bin
 
 hmackeys:	hmackeys.o $(BPLIBS)
-		$(CC) -o hmackeys hmackeys.o -L$(ROOT)/lib -lici -lpthread -lm
+		$(CC) -o hmackeys hmackeys.o -L$(ROOT)/lib -lici $(PTHREADS) -lm
 		cp hmackeys ./bin
 
 acsadmin:	acsadmin.o $(BPLIBS)
-		$(CC) -o acsadmin acsadmin.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o acsadmin acsadmin.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp acsadmin ./bin
 
 acslist:	acslist.o $(BPLIBS)
-		$(CC) -o acslist acslist.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o acslist acslist.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp acslist ./bin
 
 cgrfetch:	cgrfetch.o $(BPLIBS)
-		$(CC) -o cgrfetch cgrfetch.o -L./lib -L$(ROOT)/lib -lcgr $(LBP) -lici -lpthread -lm
+		$(CC) -o cgrfetch cgrfetch.o -L./lib -L$(ROOT)/lib -lcgr $(LBP) -lici $(PTHREADS) -lm
 		cp acslist ./bin
 
 #	-	-	IPN executables	-	-	-	-	-
 
-ipnfw:		ipnfw.o $(BPLIBS) libipnfw.so libcgr.so
-		$(CC) -o ipnfw ipnfw.o -L./lib -L$(ROOT)/lib -lcgr $(LBP) -lici -lpthread -lm
+ipnfw:		ipnfw.o $(BPLIBS) libipnfw.a libcgr.a
+		$(CC) -o ipnfw ipnfw.o -L./lib -L$(ROOT)/lib -lcgr $(LBP) -lici $(PTHREADS) -lm
 		cp ipnfw ./bin
 
-ipnadminep:	ipnadminep.o $(BPLIBS) libipnfw.so
-		$(CC) -o ipnadminep ipnadminep.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+ipnadminep:	ipnadminep.o $(BPLIBS) libipnfw.a
+		$(CC) -o ipnadminep ipnadminep.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp ipnadminep ./bin
 
 #	-	-	IMC executables	-	-	-	-	-
 
-imcfw:		imcfw.o $(BPLIBS) libimcfw.so libipnfw.so
-		$(CC) -o imcfw imcfw.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+imcfw:		imcfw.o $(BPLIBS) libimcfw.a libipnfw.a
+		$(CC) -o imcfw imcfw.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp imcfw ./bin
 
 #	-	-	DTN2 executables	-	-	-	-
 
-dtn2fw:		dtn2fw.o $(BPLIBS) libdtn2fw.so
-		$(CC) -o dtn2fw dtn2fw.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+dtn2fw:		dtn2fw.o $(BPLIBS) libdtn2fw.a
+		$(CC) -o dtn2fw dtn2fw.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp dtn2fw ./bin
 
-dtn2adminep:	dtn2adminep.o $(BPLIBS) libdtn2fw.so
-		$(CC) -o dtn2adminep dtn2adminep.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+dtn2adminep:	dtn2adminep.o $(BPLIBS) libdtn2fw.a
+		$(CC) -o dtn2adminep dtn2adminep.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp dtn2adminep ./bin
 
 #	-	-	LTP executables	-	-	-	-	-
+# Dallon - "Not sure if we need lltpP. It wasn't being made for uCLibc originally"
 
 ltpcli:		ltpcli.o $(BPLIBS)
-		$(CC) -o ltpcli ltpcli.o -L./lib -L$(ROOT)/lib $(LBP) -lltp -lltpP -lici -lpthread -lm
+		$(CC) -o ltpcli ltpcli.o -L./lib -L$(ROOT)/lib $(LBP) -lltp -lltpP -lici $(PTHREADS) -lm
 		cp ltpcli ./bin
 
 ltpclo:		ltpclo.o $(BPLIBS)
-		$(CC) -o ltpclo ltpclo.o -L./lib -L$(ROOT)/lib $(LBP) -lltp -lltpP -lici -lpthread -lm
+		$(CC) -o ltpclo ltpclo.o -L./lib -L$(ROOT)/lib $(LBP) -lltp -lltpP -lici $(PTHREADS) -lm
 		cp ltpclo ./bin
 
 #	-	-	TCP executables	-	-	-	-	-
 
 tcpcli:		tcpcli.o $(BPLIBS)
-		$(CC) -o tcpcli tcpcli.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o tcpcli tcpcli.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp tcpcli ./bin
 
 tcpclo:		tcpclo.o $(BPLIBS)
-		$(CC) -o tcpclo tcpclo.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o tcpclo tcpclo.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp tcpclo ./bin
 
 #	-	-	STCP executables	-	-	-	-
 
-stcpcli:	stcpcli.o $(BPLIBS) libstcpcla.so
-		$(CC) -o stcpcli stcpcli.o -L./lib -L$(ROOT)/lib -lstcpcla $(LBP) -lici -lpthread -lm
+stcpcli:	stcpcli.o $(BPLIBS) libstcpcla.a
+		$(CC) -o stcpcli stcpcli.o -L./lib -L$(ROOT)/lib -lstcpcla $(LBP) -lici $(PTHREADS) -lm
 		cp stcpcli ./bin
 
-stcpclo:	stcpclo.o $(BPLIBS) libstcpcla.so
-		$(CC) -o stcpclo stcpclo.o -L./lib -L$(ROOT)/lib -lstcpcla $(LBP) -lici -lpthread -lm
+stcpclo:	stcpclo.o $(BPLIBS) libstcpcla.a
+		$(CC) -o stcpclo stcpclo.o -L./lib -L$(ROOT)/lib -lstcpcla $(LBP) -lici $(PTHREADS) -lm
 		cp stcpclo ./bin
 
 #	-	-	UDP executables	-	-	-	-	-
 
-udpcli:		udpcli.o $(BPLIBS) libudpcla.so
-		$(CC) -o udpcli udpcli.o -L./lib -L$(ROOT)/lib -ludpcla $(LBP) -lici -lpthread -lm
+udpcli:		udpcli.o $(BPLIBS) libudpcla.a
+		$(CC) -o udpcli udpcli.o -L./lib -L$(ROOT)/lib -ludpcla $(LBP) -lici $(PTHREADS) -lm
 		cp udpcli ./bin
 
-udpclo:		udpclo.o $(BPLIBS) libudpcla.so
-		$(CC) -o udpclo udpclo.o -L./lib -L$(ROOT)/lib -ludpcla $(LBP) -lici -lpthread -lm
+udpclo:		udpclo.o $(BPLIBS) libudpcla.a
+		$(CC) -o udpclo udpclo.o -L./lib -L$(ROOT)/lib -ludpcla $(LBP) -lici $(PTHREADS) -lm
 		cp udpclo ./bin
 
 #	-	-	BSSP executables	-	-	-	-
 
 bsspcli:	bsspcli.o $(BPLIBS)
-		$(CC) -o bsspcli bsspcli.o -L./lib -L$(ROOT)/lib $(LBP) -lbssp -lbsspP -lici -lpthread -lm
+		$(CC) -o bsspcli bsspcli.o -L./lib -L$(ROOT)/lib $(LBP) -lbssp -lbsspP -lici $(PTHREADS) -lm
 		cp bsspcli ./bin
 
 bsspclo:	bsspclo.o $(BPLIBS)
-		$(CC) -o bsspclo bsspclo.o -L./lib -L$(ROOT)/lib $(LBP) -lbssp -lbsspP -lici -lpthread -lm
+		$(CC) -o bsspclo bsspclo.o -L./lib -L$(ROOT)/lib $(LBP) -lbssp -lbsspP -lici $(PTHREADS) -lm
 		cp bsspclo ./bin
 
 #	-	-	DCCP executables	-	-	-	-
 
 dccpcli:	dccpcli.o $(BPLIBS)
-		$(CC) -o dccpcli dccpcli.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o dccpcli dccpcli.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp dccpcli ./bin
 
 dccpclo:	dccpclo.o $(BPLIBS)
-		$(CC) -o dccpclo dccpclo.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o dccpclo dccpclo.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp dccpclo ./bin
 
 #	-	-	DGR executables	-	-	-	-	-
 
 dgrcli:		dgrcli.o $(BPLIBS)
-		$(CC) -o dgrcli dgrcli.o -L./lib -L$(ROOT)/lib $(LBP) -ldgr -lici -lpthread -lm
+		$(CC) -o dgrcli dgrcli.o -L./lib -L$(ROOT)/lib $(LBP) -ldgr -lici $(PTHREADS) -lm
 		cp dgrcli ./bin
 
 dgrclo:		dgrclo.o $(BPLIBS)
-		$(CC) -o dgrclo dgrclo.o -L./lib -L$(ROOT)/lib $(LBP) -ldgr -lici -lpthread -lm
+		$(CC) -o dgrclo dgrclo.o -L./lib -L$(ROOT)/lib $(LBP) -ldgr -lici $(PTHREADS) -lm
 		cp dgrclo ./bin
 
 #	-	-	BRS executables	-	-	-	-
 
-brsscla:	brsscla.o $(BPLIBS) libstcpcla.so
-		$(CC) -o brsscla brsscla.o -L./lib -L$(ROOT)/lib -lstcpcla $(LBP) -lici -lpthread -lm
+brsscla:	brsscla.o $(BPLIBS) libstcpcla.a
+		$(CC) -o brsscla brsscla.o -L./lib -L$(ROOT)/lib -lstcpcla $(LBP) -lici $(PTHREADS) -lm
 		cp brsscla ./bin
 
-brsccla:	brsccla.o $(BPLIBS) libstcpcla.so
-		$(CC) -o brsccla brsccla.o -L./lib -L$(ROOT)/lib -lstcpcla $(LBP) -lici -lpthread -lm
+brsccla:	brsccla.o $(BPLIBS) libstcpcla.a
+		$(CC) -o brsccla brsccla.o -L./lib -L$(ROOT)/lib -lstcpcla $(LBP) -lici $(PTHREADS) -lm
 		cp brsccla ./bin
 
 #	-	-	BIBE executable	-	-	-	-	-
 
 bibeclo:	bibeclo.o $(BPLIBS)
-		$(CC) -o bibeclo bibeclo.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+		$(CC) -o bibeclo bibeclo.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bibeclo ./bin
 
 #	-	-	IPND executable	-	-	-	-	-
 
 #ipnd:		$(IPNDOBJS) $(BPLIBS)
-#		$(CC) -o ipnd $(IPNDOBJS) -L./lib -L$(ROOT)/lib $(LBP) -lici -lbloom -lpthread -lm
+#		$(CC) -o ipnd $(IPNDOBJS) -L./lib -L$(ROOT)/lib $(LBP) -lici -lbloom $(PTHREADS) -lm
 #		cp ipnd ./bin
 
 #	-	-	Test executables	-	-	-	-
 
-bpsource:	bpsource.o libbp.so $(BPLIBS)
-		$(CC) -o bpsource bpsource.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+bpsource:	bpsource.o libbp.a $(BPLIBS)
+		$(CC) -o bpsource bpsource.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bpsource ./bin
 
-bpsink:		bpsink.o libbp.so $(BPLIBS)
-		$(CC) -o bpsink bpsink.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+bpsink:		bpsink.o libbp.a $(BPLIBS)
+		$(CC) -o bpsink bpsink.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bpsink ./bin
 
-bpdriver:	bpdriver.o libbp.so $(BPLIBS)
-		$(CC) -o bpdriver bpdriver.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+bpdriver:	bpdriver.o libbp.a $(BPLIBS)
+		$(CC) -o bpdriver bpdriver.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bpdriver ./bin
 
-bpecho:		bpecho.o libbp.so $(BPLIBS)
-		$(CC) -o bpecho bpecho.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+bpecho:		bpecho.o libbp.a $(BPLIBS)
+		$(CC) -o bpecho bpecho.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bpecho ./bin
 
-bpcounter:	bpcounter.o libbp.so $(BPLIBS)
-		$(CC) -o bpcounter bpcounter.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+bpcounter:	bpcounter.o libbp.a $(BPLIBS)
+		$(CC) -o bpcounter bpcounter.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bpcounter ./bin
 
-bpsendfile:	bpsendfile.o libbp.so $(BPLIBS)
-		$(CC) -o bpsendfile bpsendfile.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+bpsendfile:	bpsendfile.o libbp.a $(BPLIBS)
+		$(CC) -o bpsendfile bpsendfile.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bpsendfile ./bin
 
-bprecvfile:	bprecvfile.o libbp.so $(BPLIBS)
-		$(CC) -o bprecvfile bprecvfile.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+bprecvfile:	bprecvfile.o libbp.a $(BPLIBS)
+		$(CC) -o bprecvfile bprecvfile.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bprecvfile ./bin
 
-bpnmtest:	bpnmtest.o libbp.so $(BPLIBS)
-		$(CC) -o bpnmtest bpnmtest.o -L./lib -L$(ROOT)/lib $(LBP) -lici -lpthread -lm
+bpnmtest:	bpnmtest.o libbp.a $(BPLIBS)
+		$(CC) -o bpnmtest bpnmtest.o -L./lib -L$(ROOT)/lib $(LBP) -lici $(PTHREADS) -lm
 		cp bpnmtest ./bin
 
 #	-	-	Libraries	-	-	-	-	-
 
-libbp.so:	libbp.o $(BPPOBJS) libbpnm.o
-		$(LD) -o libbp.so libbp.o $(BPPOBJS) libbpnm.o
-		cp libbp.so ./lib
+libbp.a:	libbp.o $(BPPOBJS) libbpnm.o
+		$(LD) libbp.a libbp.o $(BPPOBJS) libbpnm.o
+		cp libbp.a ./lib
 
-libcgr.so:	libcgr.o
-		$(LD) -o libcgr.so libcgr.o
-		cp libcgr.so ./lib
+libcgr.a:	libcgr.o
+		$(LD) libcgr.a libcgr.o
+		cp libcgr.a ./lib
 
-libipnfw.so:	libipnfw.o
-		$(LD) -o libipnfw.so libipnfw.o
-		cp libipnfw.so ./lib
+libipnfw.a:	libipnfw.o
+		$(LD) libipnfw.a libipnfw.o
+		cp libipnfw.a ./lib
 
-libimcfw.so:	libimcfw.o
-		$(LD) -o libimcfw.so libimcfw.o
-		cp libimcfw.so ./lib
+libimcfw.a:	libimcfw.o
+		$(LD) libimcfw.a libimcfw.o
+		cp libimcfw.a ./lib
 
-libdtn2fw.so:	libdtn2fw.o
-		$(LD) -o libdtn2fw.so libdtn2fw.o
-		cp libdtn2fw.so ./lib
+libdtn2fw.a:	libdtn2fw.o
+		$(LD) libdtn2fw.a libdtn2fw.o
+		cp libdtn2fw.a ./lib
 
-libstcpcla.so:	libstcpcla.o
-		$(LD) -o libstcpcla.so libstcpcla.o
-		cp libstcpcla.so ./lib
+libstcpcla.a:	libstcpcla.o
+		$(LD) libstcpcla.a libstcpcla.o
+		cp libstcpcla.a ./lib
 
-libudpcla.so:	libudpcla.o
-		$(LD) -o libudpcla.so libudpcla.o
-		cp libudpcla.so ./lib
+libudpcla.a:	libudpcla.o
+		$(LD) libudpcla.a libudpcla.o
+		cp libudpcla.a ./lib
 
 #	-	-	Object modules	-	-	-	-	-
 
