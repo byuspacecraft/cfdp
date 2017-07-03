@@ -4,13 +4,13 @@ cfdpreqs:
 	echo "\n\n"
 	gmake -C ltp all
 	gmake -C ltp install
-#	echo "\n\n"
-#	gmake -C dgr all
-#	gmake -C dgr install
-#	echo "\n\n"
-#	gmake -C bp all
-#	gmake -C bp install
-#	echo "\n\n"
+	echo "\n\n"
+	gmake -C dgr all
+	gmake -C dgr install
+	echo "\n\n"
+	gmake -C bp all
+	gmake -C bp install
+	echo "\n\n"
 #	gmake -C cfdp all
 #	gmake -C cfdp install
 #	echo "\n\n"

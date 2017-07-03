@@ -10,7 +10,8 @@ CC = $(CROSS_COMPILE_APPS)gcc $(OPT)
 CC += -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/
 CC += -I$(API) -I$(TEST) -I$(INCL) -I$(ROOT)/include
 LDFLAGS = -fPIC -shared
-LD = $(TLD) $(LDFLAGS)
+LD = $(TLD) ar rcs
+PTHREADS = -L/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/lib -pthread
 
 LIBDGROBJS = \
 	libdgr.o
@@ -20,7 +21,7 @@ PUBINCLS = \
 
 RUNTIMES = file2dgr dgr2file file2tcp tcp2file file2udp udp2file
 
-ALL = check libdgr.so $(RUNTIMES)
+ALL = check libdgr.a $(RUNTIMES)
 
 all:		$(ALL)
 
@@ -43,35 +44,35 @@ install:
 
 #	-	-	Test executables	-	-	-	-
 
-file2dgr:	file2dgr.o libdgr.so $(TEST)/file2dgr.h
-		$(CC) -o file2dgr file2dgr.o -L./lib -L$(ROOT)/lib -ldgr -lici -lpthread -lm
+file2dgr:	file2dgr.o libdgr.a $(TEST)/file2dgr.h
+		$(CC) -o file2dgr file2dgr.o -L./lib -L$(ROOT)/lib -ldgr -lici $(PTHREADS) -lm
 		cp file2dgr ./bin
 
-dgr2file:	dgr2file.o libdgr.so $(TEST)/file2dgr.h
-		$(CC) -o dgr2file dgr2file.o -L./lib -L$(ROOT)/lib -ldgr -lici -lpthread -lm
+dgr2file:	dgr2file.o libdgr.a $(TEST)/file2dgr.h
+		$(CC) -o dgr2file dgr2file.o -L./lib -L$(ROOT)/lib -ldgr -lici $(PTHREADS) -lm
 		cp dgr2file ./bin
 
 tcp2file:	tcp2file.o $(TEST)/file2tcp.h
-		$(CC) -o tcp2file tcp2file.o -L$(ROOT)/lib -L./lib -lici -lpthread -lm
+		$(CC) -o tcp2file tcp2file.o -L$(ROOT)/lib -L./lib -lici $(PTHREADS) -lm
 		cp tcp2file ./bin
 
 file2tcp:	file2tcp.o $(TEST)/file2tcp.h
-		$(CC) -o file2tcp file2tcp.o -L$(ROOT)/lib -L./lib -lici -lpthread -lm
+		$(CC) -o file2tcp file2tcp.o -L$(ROOT)/lib -L./lib -lici $(PTHREADS) -lm
 		cp file2tcp ./bin
 
 udp2file:	udp2file.o $(TEST)/file2udp.h
-		$(CC) -o udp2file udp2file.o -L$(ROOT)/lib -L./lib -lici -lpthread -lm
+		$(CC) -o udp2file udp2file.o -L$(ROOT)/lib -L./lib -lici $(PTHREADS) -lm
 		cp udp2file ./bin
 
 file2udp:	file2udp.o $(TEST)/file2udp.h
-		$(CC) -o file2udp file2udp.o -L$(ROOT)/lib -L./lib -lici -lpthread -lm
+		$(CC) -o file2udp file2udp.o -L$(ROOT)/lib -L./lib -lici $(PTHREADS) -lm
 		cp file2udp ./bin
 
 #	-	-	Libraries	-	-	-	-	-
 
-libdgr.so:	$(LIBDGROBJS)
-		$(LD) -o libdgr.so $(LIBDGROBJS)
-		cp libdgr.so ./lib
+libdgr.a:	$(LIBDGROBJS)
+		$(LD) libdgr.a $(LIBDGROBJS)
+		cp libdgr.a ./lib
 
 #	-	-	Object modules	-	-	-	-	-
 
