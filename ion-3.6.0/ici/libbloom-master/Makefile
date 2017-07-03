@@ -61,19 +61,14 @@ OPT=-O3
 endif
 
 
-all: $(BUILD)/libbloom.a
+all: $(BUILD)/libbloom.a $(BUILD)/test-libbloom
 
 $(BUILD)/libbloom.a: $(BUILD)/murmurhash2.o $(BUILD)/bloom.o
-	(cd $(BUILD) && ar rcs libbloom.a bloom.o murmurhash2.o)
+	(cd $(BUILD) && ar rcs libbloom.a bloom.o murmurhash2.o )
 
-$(BUILD)/test-libbloom: $(TESTDIR)/test.c $(BUILD)/$(SO_VERSIONED)
-	$(COM) -I$(TOP) -c $(TESTDIR)/test.c -o $(BUILD)/test.o
+$(BUILD)/test-libbloom: $(BUILD)/test.o $(BUILD)/libbloom.a
 	(cd $(BUILD) && \
-	    $(COM) test.o -L$(BUILD) $(RPATH) -lbloom -o test-libbloom)
-
-$(BUILD)/test-basic: $(TESTDIR)/basic.c $(BUILD)/libbloom.a
-	$(COM) -I$(TOP) $(LIB) \
-	    $(TESTDIR)/basic.c $(BUILD)/libbloom.a -o $(BUILD)/test-basic
+	$(CC) test.o -L$(BUILD) $(RPATH) -lbloom $(LIB) -o test-libbloom)
 
 $(BUILD)/%.o: %.c
 	mkdir -p $(BUILD)
@@ -88,7 +83,7 @@ clean:
 
 install:
 	cp bloom.h $(ROOT)/include
-	cp build/*.so $(ROOT)/lib
+	cp build/*.a $(ROOT)/lib
 	cp build/test-libbloom $(ROOT)/bin
 
 lint:

@@ -1,4 +1,4 @@
-OPT = /home/ecestudent/ion-3.6.0/opt
+OPT = /home/ecestudent/cfdp/ion-3.6.0/opt
 HEAP_PTRS = 0
 PLATFORMS = arm-uClibc
 # i86-redhat
