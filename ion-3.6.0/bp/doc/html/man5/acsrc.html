@@ -1,0 +1,141 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body>
+
+
+
+<h1 id="NAME">NAME</h1>
+
+<p>acsrc - Aggregate Custody Signal management commands file</p>
+
+<h1 id="DESCRIPTION">DESCRIPTION</h1>
+
+<p>Aggregate Custody Signal management commands are passed to <b>acsadmin</b> either in a file of text lines or interactively at <b>acsadmin</b>&#39;s command prompt (:). Commands are interpreted line-by line, with exactly one command per line. The formats and effects of the Aggregate Custody Signal management commands are described below.</p>
+
+<h1 id="GENERAL-COMMANDS">GENERAL COMMANDS</h1>
+
+<dl>
+
+<dt id="pod"><b>?</b></dt>
+<dd>
+
+<p>The <b>help</b> command. This will display a listing of the commands and their formats. It is the same as the <b>h</b> command.</p>
+
+</dd>
+<dt id="pod1"><b>#</b></dt>
+<dd>
+
+<p>Comment line. Lines beginning with <b>#</b> are not interpreted.</p>
+
+</dd>
+<dt id="e-1-0"><b>e</b> { 1 | 0 }</dt>
+<dd>
+
+<p>Echo control. Setting echo to 1 causes all output printed by acsadmin to be logged as well as sent to stdout. Setting echo to 0 disables this behavior.</p>
+
+</dd>
+<dt id="v"><b>v</b></dt>
+<dd>
+
+<p>Version number. Prints out the version of ION currently installed. HINT: combine with <b>e 1</b> command to log the version number at startup.</p>
+
+</dd>
+<dt id="logLevel-heapWords"><b>1</b> &lt;logLevel&gt; [&lt;heapWords&gt;]</dt>
+<dd>
+
+<p>The <b>initialize</b> command. Until this command is executed, Aggregate Custody Signals are not in operation on the local ION node and most <i>acsadmin</i> commands will fail.</p>
+
+<p>The <i>logLevel</i> argument specifies at which log level the ACS appending and transmitting implementation should record its activity to the ION log file. This argument is the bitwise &quot;OR&quot; of the following log levels:</p>
+
+<dl>
+
+<dt id="x01-ERROR">0x01 ERROR</dt>
+<dd>
+
+<p>Errors in ACS programming are logged.</p>
+
+</dd>
+<dt id="x02-WARN">0x02 WARN</dt>
+<dd>
+
+<p>Warnings like &quot;out of memory&quot; that don&#39;t cause ACS to fail but may change behavior are logged.</p>
+
+</dd>
+<dt id="x04-INFO">0x04 INFO</dt>
+<dd>
+
+<p>Informative information like &quot;this custody signal is a duplicate&quot; is logged.</p>
+
+</dd>
+<dt id="x08-DEBUG">0x08 DEBUG</dt>
+<dd>
+
+<p>Verbose information like the state of the pending ACS tree is logged.</p>
+
+</dd>
+</dl>
+
+<p>The optional <i>heapWords</i> argument informs ACS to allocate that many heap words in its own DRAM SDR for constructing pending ACS. If not supplied, the default ACS_SDR_DEFAULT_HEAPWORDS is used. Once all ACS SDR is allocated, any incoming custodial bundles that would trigger an ACS will trigger a normal, non-aggregate custody signal instead, until ACS SDR is freed. If your node intermittently emits non-aggregate custody signals when it should emit ACS, you should increase <i>heapWords</i>.</p>
+
+<p>Since ACS uses SDR only for emitting Aggregate Custody Signals, ION can still receive ACS even if this command is not executed, or all ACS SDR memory is allocated.</p>
+
+</dd>
+<dt id="h"><b>h</b></dt>
+<dd>
+
+<p>The <b>help</b> command. This will display a listing of the commands and their formats. It is the same as the <b>?</b> command.</p>
+
+</dd>
+<dt id="s-minimumCustodyId"><b>s</b> &lt;minimumCustodyId&gt;</dt>
+<dd>
+
+<p>This command sets the minimum custody ID that the local bundle agent may use in custody transfer enhancement blocks that it emits. These custody IDs must be unique in the network (for the lifetime of the bundles to which they refer).</p>
+
+<p>The <i>minimumCustodyId</i> provided is stored in SDR, and incremented every time a new custody ID is required. So, this command should be used only when the local bundle agent has discarded its SDR and restarted.</p>
+
+</dd>
+</dl>
+
+<h1 id="CUSTODIAN-COMMANDS">CUSTODIAN COMMANDS</h1>
+
+<dl>
+
+<dt id="a-custodianEid-acsSize-acsDelay"><b>a</b> <i>custodianEid</i> <i>acsSize</i> [<i>acsDelay</i>]</dt>
+<dd>
+
+<p>The <b>add custodian</b> command. This command provides information about the ACS characteristics of a remote custodian. <i>custodianEid</i> is the custodian EID for which this command is providing information. <i>acsSize</i> is the preferred size of ACS bundles sent to <i>custodianEid</i>; ACS bundles this implementation sends to <i>custodianEid</i> will aggregate until ACS are at most <i>acsSize</i> bytes (if <i>acsSize</i> is smaller than 19 bytes, some ACS containing only one signal will exceed <i>acsSize</i> and be sent anyways; setting <i>acsSize</i> to 0 causes &quot;aggregates&quot; of only 1 signal to be sent).</p>
+
+<p><i>acsDelay</i> is the maximum amount of time to delay an ACS destined for this custodian before sending it, in seconds; if not specified, DEFAULT_ACS_DELAY will be used.</p>
+
+</dd>
+</dl>
+
+<h1 id="EXAMPLES">EXAMPLES</h1>
+
+<dl>
+
+<dt id="a-ipn:15.0-100-27">a ipn:15.0 100 27</dt>
+<dd>
+
+<p>Informs ACS on the local node that the local node should send ACS bundles destined for the custodian ipn:15.0 whenever they are 100 bytes in size or have been delayed for 27 seconds, whichever comes first.</p>
+
+</dd>
+</dl>
+
+<h1 id="SEE-ALSO">SEE ALSO</h1>
+
+<p>acsadmin(1)</p>
+
+
+</body>
+
+</html>
+
+

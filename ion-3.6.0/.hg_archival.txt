@@ -1,0 +1,5 @@
+repo: f911270590cc40ddf350c888727f780218de8eaa
+node: 91419f43633f914d0fb87a49b042e15cc51e07a0
+branch: integration-3.6.0
+latesttag: ion-3.5.0
+latesttagdistance: 76

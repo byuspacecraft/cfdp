@@ -1,0 +1,239 @@
+gmake -C ici all
+gmake[1]: Entering directory '/home/ecestudent/ion-3.6.0/ici'
+cd libbloom-master; \
+	gmake all MM=; \
+	cd ..; \
+	for PF in arm-uClibc;\
+		do \
+			cd $PF; \
+			mkdir -p bin; \
+			mkdir -p lib; \
+			gmake all ROOT=/home/ecestudent/ion-3.6.0/opt PTRS=0; \
+			cd ..; \
+		done
+gmake[2]: Entering directory '/home/ecestudent/ion-3.6.0/ici/libbloom-master'
+mkdir -p /home/ecestudent/ion-3.6.0/ici/libbloom-master/build
+gcc -Wall -O3  -std=c99 -fPIC -I/home/ecestudent/ion-3.6.0/ici/libbloom-master -I/home/ecestudent/ion-3.6.0/ici/libbloom-master/murmur2 -c murmur2/MurmurHash2.c -o /home/ecestudent/ion-3.6.0/ici/libbloom-master/build/murmurhash2.o
+mkdir -p /home/ecestudent/ion-3.6.0/ici/libbloom-master/build
+gcc -Wall -O3  -std=c99 -fPIC -I/home/ecestudent/ion-3.6.0/ici/libbloom-master -I/home/ecestudent/ion-3.6.0/ici/libbloom-master/murmur2 -c bloom.c -o /home/ecestudent/ion-3.6.0/ici/libbloom-master/build/bloom.o
+(cd /home/ecestudent/ion-3.6.0/ici/libbloom-master/build && gcc -Wall -O3  -std=c99 -fPIC bloom.o murmurhash2.o -shared -lm  -o libbloom.so)
+mkdir -p /home/ecestudent/ion-3.6.0/ici/libbloom-master/build
+gcc -Wall -O3  -std=c99 -fPIC -I/home/ecestudent/ion-3.6.0/ici/libbloom-master -I/home/ecestudent/ion-3.6.0/ici/libbloom-master/murmur2 -c test.c -o /home/ecestudent/ion-3.6.0/ici/libbloom-master/build/test.o
+(cd /home/ecestudent/ion-3.6.0/ici/libbloom-master/build && gcc -Wall -O3  -std=c99 -fPIC test.o -L/home/ecestudent/ion-3.6.0/ici/libbloom-master/build -Wl,-rpath,/home/ecestudent/ion-3.6.0/ici/libbloom-master/build -lbloom -o test-libbloom)
+gmake[2]: Leaving directory '/home/ecestudent/ion-3.6.0/ici/libbloom-master'
+gmake[2]: Entering directory '/home/ecestudent/ion-3.6.0/ici/arm-uClibc'
+rm -f *.o
+touch check
+mkdir -p lib
+mkdir -p bin
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../library/llcv.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../library/platform.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../library/platform_sm.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../library/memmgr.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../library/lyst.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../library/psm.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../library/smlist.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../library/smrbt.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../library/sptrace.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../library/ion.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../library/rfx.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../library/ionsec.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../crypto/NULL_SUITES/crypto.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../crypto/NULL_SUITES/csi.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../bulk/STUB_BULK/bulk.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../library/zco.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../sdr/sdrxn.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../sdr/sdrmgt.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../sdr/sdrstring.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../sdr/sdrlist.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../sdr/sdrtable.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../sdr/sdrhash.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../sdr -I../include -I../crypto -c ../sdr/sdrcatlg.c
+fPIC -shared -o libici.so llcv.o platform.o platform_sm.o memmgr.o lyst.o psm.o smlist.o smrbt.o sptrace.o ion.o rfx.o ionsec.o crypto.o csi.o bulk.o zco.o sdrxn.o sdrmgt.o sdrstring.o sdrlist.o sdrtable.o sdrhash.o sdrcatlg.o
+Makefile:171: recipe for target 'libici.so' failed
+cp libici.so ./lib
+Makefile:171: recipe for target 'libici.so' failed
+gmake[2]: Leaving directory '/home/ecestudent/ion-3.6.0/ici/arm-uClibc'
+gmake[1]: Leaving directory '/home/ecestudent/ion-3.6.0/ici'
+gmake -C ici install
+gmake[1]: Entering directory '/home/ecestudent/ion-3.6.0/ici'
+cd libbloom-master; \
+	gmake -i install ROOT=/home/ecestudent/ion-3.6.0/opt; \
+	cd ..; \
+	for PF in arm-uClibc;\
+		do cd $PF; gmake -i install ROOT=/home/ecestudent/ion-3.6.0/opt; cd ..; done
+gmake[2]: Entering directory '/home/ecestudent/ion-3.6.0/ici/libbloom-master'
+cp bloom.h /home/ecestudent/ion-3.6.0/opt/include
+cp build/*.so /home/ecestudent/ion-3.6.0/opt/lib
+cp build/test-libbloom /home/ecestudent/ion-3.6.0/opt/bin
+gmake[2]: Leaving directory '/home/ecestudent/ion-3.6.0/ici/libbloom-master'
+gmake[2]: Entering directory '/home/ecestudent/ion-3.6.0/ici/arm-uClibc'
+cp ../include/*.h /home/ecestudent/ion-3.6.0/opt/include
+cp lib/* /home/ecestudent/ion-3.6.0/opt/lib
+Makefile:94: recipe for target 'install' failed
+cp bin/* /home/ecestudent/ion-3.6.0/opt/bin
+Makefile:94: recipe for target 'install' failed
+gmake[2]: Leaving directory '/home/ecestudent/ion-3.6.0/ici/arm-uClibc'
+gmake[1]: Leaving directory '/home/ecestudent/ion-3.6.0/ici'
+gmake -C ltp all
+gmake[1]: Entering directory '/home/ecestudent/ion-3.6.0/ltp'
+for PF in arm-uClibc; \
+		do \
+			cd $PF; \
+			mkdir -p bin; \
+			mkdir -p lib; \
+			gmake all ROOT=/home/ecestudent/ion-3.6.0/opt PTRS=0; \
+			cd ..; \
+		done
+gmake[2]: Entering directory '/home/ecestudent/ion-3.6.0/ltp/arm-uClibc'
+rm -f *.o
+touch check
+mkdir -p lib
+mkdir -p bin
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../library/ext -I../library/ext/auth -I../include -I/home/ecestudent/ion-3.6.0/opt/include -c ../library/libltpP.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../library/ext -I../library/ext/auth -I../include -I/home/ecestudent/ion-3.6.0/opt/include -c ../library/libltp.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../library/ext -I../library/ext/auth -I../include -I/home/ecestudent/ion-3.6.0/opt/include -c ../library/ltpei.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../library/ext -I../library/ext/auth -I../include -I/home/ecestudent/ion-3.6.0/opt/include -c ../library/ext/auth/auth.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../library/ext -I../library/ext/auth -I../include -I/home/ecestudent/ion-3.6.0/opt/include -c ../library/libltpnm.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../library/ext -I../library/ext/auth -I../include -I/home/ecestudent/ion-3.6.0/opt/include -c ../sda/libsda.c
+fPIC -shared -o libltp.so libltp.o libltpP.o ltpei.o auth.o libltpnm.o libsda.o
+Makefile:104: recipe for target 'libltp.so' failed
+cp libltp.so ./lib
+Makefile:104: recipe for target 'libltp.so' failed
+gmake[2]: Leaving directory '/home/ecestudent/ion-3.6.0/ltp/arm-uClibc'
+gmake[1]: Leaving directory '/home/ecestudent/ion-3.6.0/ltp'
+gmake -C ltp install
+gmake[1]: Entering directory '/home/ecestudent/ion-3.6.0/ltp'
+for PF in arm-uClibc; \
+		do cd $PF; gmake -i install ROOT=/home/ecestudent/ion-3.6.0/opt; cd ..; done
+gmake[2]: Entering directory '/home/ecestudent/ion-3.6.0/ltp/arm-uClibc'
+cp ../include/* /home/ecestudent/ion-3.6.0/opt/include
+cp lib/* /home/ecestudent/ion-3.6.0/opt/lib
+Makefile:48: recipe for target 'install' failed
+cp bin/* /home/ecestudent/ion-3.6.0/opt/bin
+Makefile:48: recipe for target 'install' failed
+gmake[2]: Leaving directory '/home/ecestudent/ion-3.6.0/ltp/arm-uClibc'
+gmake[1]: Leaving directory '/home/ecestudent/ion-3.6.0/ltp'
+gmake -C dgr all
+gmake[1]: Entering directory '/home/ecestudent/ion-3.6.0/dgr'
+for PF in arm-uClibc; \
+		do \
+			cd $PF; \
+			mkdir -p bin; \
+			mkdir -p lib; \
+			gmake all ROOT=/home/ecestudent/ion-3.6.0/opt PTRS=0; \
+			cd ..; \
+		done
+gmake[2]: Entering directory '/home/ecestudent/ion-3.6.0/dgr/arm-uClibc'
+rm -f *.o
+touch check
+mkdir -p lib
+mkdir -p bin
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../test -I../include -I/home/ecestudent/ion-3.6.0/opt/include -c ../library/libdgr.c
+fPIC -shared -o libdgr.so libdgr.o
+Makefile:73: recipe for target 'libdgr.so' failed
+cp libdgr.so ./lib
+Makefile:73: recipe for target 'libdgr.so' failed
+gmake[2]: Leaving directory '/home/ecestudent/ion-3.6.0/dgr/arm-uClibc'
+gmake[1]: Leaving directory '/home/ecestudent/ion-3.6.0/dgr'
+gmake -C dgr install
+gmake[1]: Entering directory '/home/ecestudent/ion-3.6.0/dgr'
+for PF in arm-uClibc; \
+		do cd $PF; gmake -i install ROOT=/home/ecestudent/ion-3.6.0/opt; cd ..; done
+gmake[2]: Entering directory '/home/ecestudent/ion-3.6.0/dgr/arm-uClibc'
+cp ../include/* /home/ecestudent/ion-3.6.0/opt/include
+cp lib/* /home/ecestudent/ion-3.6.0/opt/lib
+Makefile:40: recipe for target 'install' failed
+cp bin/* /home/ecestudent/ion-3.6.0/opt/bin
+Makefile:40: recipe for target 'install' failed
+gmake[2]: Leaving directory '/home/ecestudent/ion-3.6.0/dgr/arm-uClibc'
+gmake[1]: Leaving directory '/home/ecestudent/ion-3.6.0/dgr'
+gmake -C bp all
+gmake[1]: Entering directory '/home/ecestudent/ion-3.6.0/bp'
+for PF in arm-uClibc; \
+		do \
+			cd $PF; \
+			mkdir -p bin; \
+			mkdir -p lib; \
+			gmake all ROOT=/home/ecestudent/ion-3.6.0/opt PTRS=0; \
+			cd ..; \
+		done
+gmake[2]: Entering directory '/home/ecestudent/ion-3.6.0/bp/arm-uClibc'
+rm -f *.o
+touch check
+mkdir -p lib
+mkdir -p bin
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/libbp.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/libbpP.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/eureka.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/bei.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/ext/phn/phn.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/ext/ecos/ecos.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/ext/meb/meb.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/ext/bae/bae.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/acs/acstx.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/acs/acsrx.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/acs/acsserialize.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/acs/acsappend.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/acs/acsid.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/ext/cteb/cteb.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/ext/bpsec/bpsec_util.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/ext/bpsec/bpsec_instr.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/ext/bpsec/profiles.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/ext/bpsec/bpsec_bib.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/ext/bpsec/bpsec_bcb.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -DENABLE_BPACS -DENABLE_IMC -DBPSEC -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../ipn -I../imc -I../dtn2 -I../library -I../library/acs -I../library/ext -I../library/ext/phn -I../library/ext/ecos -I../library/ext/meb -I../library/ext/bae -I../library/ext/bpsec -I../library/ext/cteb -I../stcp -I../udp -I../include -I/home/ecestudent/ion-3.6.0/opt/include -DBP_EXTENDED -c ../library/libbpnm.c
+fPIC -shared -o libbp.so libbp.o libbpP.o eureka.o bei.o phn.o ecos.o meb.o bae.o acstx.o acsrx.o acsserialize.o acsappend.o acsid.o cteb.o bpsec_util.o bpsec_instr.o profiles.o bpsec_bib.o bpsec_bcb.o libbpnm.o
+Makefile:319: recipe for target 'libbp.so' failed
+cp libbp.so ./lib
+Makefile:319: recipe for target 'libbp.so' failed
+gmake[2]: Leaving directory '/home/ecestudent/ion-3.6.0/bp/arm-uClibc'
+gmake[1]: Leaving directory '/home/ecestudent/ion-3.6.0/bp'
+gmake -C bp install
+gmake[1]: Entering directory '/home/ecestudent/ion-3.6.0/bp'
+for PF in arm-uClibc; \
+		do cd $PF; gmake -i install ROOT=/home/ecestudent/ion-3.6.0/opt; cd ..; done
+gmake[2]: Entering directory '/home/ecestudent/ion-3.6.0/bp/arm-uClibc'
+cp ../include/* /home/ecestudent/ion-3.6.0/opt/include
+cp lib/* /home/ecestudent/ion-3.6.0/opt/lib
+Makefile:76: recipe for target 'install' failed
+cp bin/* /home/ecestudent/ion-3.6.0/opt/bin
+Makefile:76: recipe for target 'install' failed
+gmake[2]: Leaving directory '/home/ecestudent/ion-3.6.0/bp/arm-uClibc'
+gmake[1]: Leaving directory '/home/ecestudent/ion-3.6.0/bp'
+gmake -C cfdp all
+gmake[1]: Entering directory '/home/ecestudent/ion-3.6.0/cfdp'
+for PF in arm-uClibc; \
+		do \
+			cd $PF; \
+			mkdir -p bin; \
+			mkdir -p lib; \
+			gmake all ROOT=/home/ecestudent/ion-3.6.0/opt PTRS=0; \
+			cd ..; \
+		done
+gmake[2]: Entering directory '/home/ecestudent/ion-3.6.0/cfdp/arm-uClibc'
+rm -f *.o
+touch check
+mkdir -p lib
+mkdir -p bin
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../include -I/home/ecestudent/ion-3.6.0/opt/include -c ../library/libcfdp.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../include -I/home/ecestudent/ion-3.6.0/opt/include -c ../library/libcfdpP.c
+arm-uclinuxeabi-gcc -g -fPIC -Wall -Werror -DuClibc -mcpu=cortex-m3 -mthumb -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/ -I../library -I../include -I/home/ecestudent/ion-3.6.0/opt/include -c ../library/libcfdpops.c
+fPIC -shared -o libcfdp.so libcfdp.o libcfdpP.o libcfdpops.o
+Makefile:86: recipe for target 'libcfdp.so' failed
+cp libcfdp.so ./lib
+Makefile:86: recipe for target 'libcfdp.so' failed
+gmake[2]: Leaving directory '/home/ecestudent/ion-3.6.0/cfdp/arm-uClibc'
+gmake[1]: Leaving directory '/home/ecestudent/ion-3.6.0/cfdp'
+gmake -C cfdp install
+gmake[1]: Entering directory '/home/ecestudent/ion-3.6.0/cfdp'
+for PF in arm-uClibc; \
+		do cd $PF; gmake -i install ROOT=/home/ecestudent/ion-3.6.0/opt; cd ..; done
+gmake[2]: Entering directory '/home/ecestudent/ion-3.6.0/cfdp/arm-uClibc'
+cp ../include/* /home/ecestudent/ion-3.6.0/opt/include
+cp lib/* /home/ecestudent/ion-3.6.0/opt/lib
+Makefile:46: recipe for target 'install' failed
+cp bin/* /home/ecestudent/ion-3.6.0/opt/bin
+Makefile:46: recipe for target 'install' failed
+gmake[2]: Leaving directory '/home/ecestudent/ion-3.6.0/cfdp/arm-uClibc'
+gmake[1]: Leaving directory '/home/ecestudent/ion-3.6.0/cfdp'

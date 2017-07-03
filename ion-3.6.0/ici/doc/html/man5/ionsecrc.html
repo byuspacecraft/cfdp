@@ -1,0 +1,315 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body>
+
+
+
+<h1 id="NAME">NAME</h1>
+
+<p>ionsecrc - ION security policy management commands file</p>
+
+<h1 id="DESCRIPTION">DESCRIPTION</h1>
+
+<p>ION security policy management commands are passed to <b>ionsecadmin</b> either in a file of text lines or interactively at <b>ionsecadmin</b>&#39;s command prompt (:). Commands are interpreted line-by line, with exactly one command per line. The formats and effects of the ION security policy management commands are described below.</p>
+
+<p>A parameter identifed as an <i>eid_expr</i> is an &quot;endpoint ID expression.&quot; For all commands, whenever the last character of an endpoint ID expression is the wild-card character &#39;*&#39;, an applicable endpoint ID &quot;matches&quot; this EID expression if all characters of the endpoint ID expression prior to the last one are equal to the corresponding characters of that endpoint ID. Otherwise an applicable endpoint ID &quot;matches&quot; the EID expression only when all characters of the EID and EID expression are identical.</p>
+
+<p>ION&#39;s security policy management encompasses both BP security and LTP authentication. ION has begun supporting the proposed &quot;streamlined&quot; Bundle Security Protocol (Internet Draft draft-birrane-dtn-sbsp-00) in place of standard Bundle Security Protocol (RFC 6257). Since SBSP is not yet a published RFC, ION&#39;s Bundle Protocol security mechanisms will not necessarily interoperate with those of other BP implementations. This is unfortunate but (we hope) temporary, as SBSP represents a major improvement in bundle security. It is possible that the SBSP specification will change somewhat between now and the time SBSP is published as an RFC, and ION will be revised as necessary to conform to those changes, but in the meantime we believe that the advantages of SBSP make it more suitable than RFC 6257 as a foundation for the development and deployment of secure DTN applications.</p>
+
+<h1 id="COMMANDS">COMMANDS</h1>
+
+<dl>
+
+<dt id="pod"><b>?</b></dt>
+<dd>
+
+<p>The <b>help</b> command. This will display a listing of the commands and their formats. It is the same as the <b>h</b> command.</p>
+
+</dd>
+<dt id="pod1"><b>#</b></dt>
+<dd>
+
+<p>Comment line. Lines beginning with <b>#</b> are not interpreted.</p>
+
+</dd>
+<dt id="e-1-0"><b>e</b> { 1 | 0 }</dt>
+<dd>
+
+<p>Echo control. Setting echo to 1 causes all output printed by ionsecadmin to be logged as well as sent to stdout. Setting echo to 0 disables this behavior.</p>
+
+</dd>
+<dt id="v"><b>v</b></dt>
+<dd>
+
+<p>Version number. Prints out the version of ION currently installed. HINT: combine with <b>e 1</b> command to log the version number at startup.</p>
+
+</dd>
+<dt id="pod11"><b>1</b></dt>
+<dd>
+
+<p>The <b>initialize</b> command. Until this command is executed, the local ION node has no security policy database and most <i>ionsecadmin</i> commands will fail.</p>
+
+</dd>
+<dt id="a-key-key_name-file_name"><b>a key</b> <i>key_name</i> <i>file_name</i></dt>
+<dd>
+
+<p>The <b>add key</b> command. This command adds a named key value to the security policy database. The content of <i>file_name</i> is taken as the value of the key. Named keys can be referenced by other elements of the security policy database.</p>
+
+</dd>
+<dt id="c-key-key_name-file_name"><b>c key</b> <i>key_name</i> <i>file_name</i></dt>
+<dd>
+
+<p>The <b>change key</b> command. This command changes the value of the named key, obtaining the new key value from the content of <i>file_name</i>.</p>
+
+</dd>
+<dt id="d-key-key_name"><b>d key</b> <i>key_name</i></dt>
+<dd>
+
+<p>The <b>delete key</b> command. This command deletes the key identified by <i>name</i>.</p>
+
+</dd>
+<dt id="i-key-key_name"><b>i key</b> <i>key_name</i></dt>
+<dd>
+
+<p>This command will print information about the named key, i.e., the length of its current value.</p>
+
+</dd>
+<dt id="l-key"><b>l key</b></dt>
+<dd>
+
+<p>This command lists all keys in the security policy database.</p>
+
+</dd>
+<dt id="a-bspbabrule-sender_eid_expr-receiver_eid_expr-ciphersuite_name-key_name"><b>a bspbabrule</b> <i>sender_eid_expr</i> <i>receiver_eid_expr</i> <i>{ &#39;&#39; | ciphersuite_name key_name }</i></dt>
+<dd>
+
+<p>The <b>add bspbabrule</b> command. This command adds a rule specifying the manner in which Bundle Authentication Block (BAB) validation will be applied to all bundles sent from any node whose endpoints&#39; IDs match <i>sender_eid_expr</i> and received at any node whose endpoints&#39; IDs match <i>receiver_eid_expr</i>. Both <i>sender_eid_expr</i> and <i>receiver_eid_expr</i> should terminate in wild-card characters, because both the security source and security destination of a BAB are actually nodes rather than individual endpoints.</p>
+
+<p>If a zero-length string (&#39;&#39;) is indicated instead of a <i>ciphersuite_name</i> then BAB validation is disabled for this sender/receiver EID expression pair: all bundles sent from nodes with matching administrative endpoint IDs to nodes with matching administrative endpoint IDs will be immediately deemed authentic. Otherwise, a bundle from a node with matching administrative endpoint ID to a node with matching administrative endpoint ID will only be deemed authentic if it contains a BAB computed via the ciphersuite named by <i>ciphersuite_name</i> using a key value that is identical to the current value of the key named <i>key_name</i> in the local security policy database.</p>
+
+<p><b>NOTE</b>: if the security policy database contains no BAB rules at all, then BAB authentication is disabled; all bundles received from all neighboring nodes are considered authentic. Otherwise, BAB rules <b>must</b> be defined for all nodes from which bundles are to be received; all bundles received from any node for which no BAB rule is defined are considered inauthentic and are discarded.</p>
+
+</dd>
+<dt id="c-bspbabrule-sender_eid_expr-receiver_eid_expr-ciphersuite_name-key_name"><b>c bspbabrule</b> <i>sender_eid_expr</i> <i>receiver_eid_expr</i> <i>{ &#39;&#39; | ciphersuite_name key_name }</i></dt>
+<dd>
+
+<p>The <b>change bspbabrule</b> command. This command changes the ciphersuite name and/or key name for the BAB rule pertaining to the sender/receiver EID expression pair identified by <i>sender_eid_expr</i> and <i>receiver_eid_expr</i>. Note that the <i>eid_expr</i>s must exactly match those of the rule that is to be modified, including any terminating wild-card character.</p>
+
+</dd>
+<dt id="d-bspbabrule-sender_eid_expr-receiver_eid_expr"><b>d bspbabrule</b> <i>sender_eid_expr</i> <i>receiver_eid_expr</i></dt>
+<dd>
+
+<p>The <b>delete bspbabrule</b> command. This command deletes the BAB rule pertaining to the sender/receiver EID expression pair identified by <i>sender_eid_expr</i> and <i>receiver_eid_expr</i>. Note that the <i>eid_expr</i>s must exactly match those of the rule that is to be deleted, including any terminating wild-card character.</p>
+
+</dd>
+<dt id="i-bspbabrule-sender_eid_expr-receiver_eid_expr"><b>i bspbabrule</b> <i>sender_eid_expr</i> <i>receiver_eid_expr</i></dt>
+<dd>
+
+<p>This command will print information (the ciphersuite and key names) about the BAB rule pertaining to <i>sender_eid_expr</i> and <i>receiver_eid_expr</i>.</p>
+
+</dd>
+<dt id="l-bspbabrule"><b>l bspbabrule</b></dt>
+<dd>
+
+<p>This command lists all BAB rules in the security policy database.</p>
+
+</dd>
+<dt id="a-bspbibrule-source_eid_expr-destination_eid_expr-block_type_number-ciphersuite_name-key_name"><b>a bspbibrule</b> <i>source_eid_expr</i> <i>destination_eid_expr</i> <i>block_type_number</i> <i>{ &#39;&#39; | ciphersuite_name key_name }</i></dt>
+<dd>
+
+<p>The <b>add bspbibrule</b> command. This command adds a rule specifying the manner in which Block Integrity Block (BIB) validation will be applied to blocks of type <i>block_type_number</i> for all bundles sourced at any node whose administrative endpoint ID matches <i>source_eid_expr</i> and destined for any node whose administrative endpoint ID ID matches <i>destination_eid_expr</i>.</p>
+
+<p>If a zero-length string (&#39;&#39;) is indicated instead of a <i>ciphersuite_name</i> then BIB validation is disabled for this source/destination EID expression pair: blocks of the type indicated by <i>block_type_number</i> in all bundles sourced at nodes with matching administrative endpoint IDs and destined for nodes with matching administrative endpoint IDs will be immediately deemed valid. Otherwise, a block of the indicated type that is attached to a bundle sourced at a node with matching administrative endpoint ID and destined for a node with matching administrative endpoint ID will only be deemed valid if the bundle contains a corresponding BIB computed via the ciphersuite named by <i>ciphersuite_name</i> using a key value that is identical to the current value of the key named <i>key_name</i> in the local security policy database.</p>
+
+</dd>
+<dt id="c-bspbibrule-source_eid_expr-destination_eid_expr-block_type_number-ciphersuite_name-key_name"><b>c bspbibrule</b> <i>source_eid_expr</i> <i>destination_eid_expr</i> <i>block_type_number</i> <i>{ &#39;&#39; | ciphersuite_name key_name }</i></dt>
+<dd>
+
+<p>The <b>change bspbibrule</b> command. This command changes the ciphersuite name and/or key name for the BIB rule pertaining to the source/destination EID expression pair identified by <i>source_eid_expr</i> and <i>destination_eid_expr</i> and the block identified by <i>block_type_number</i>. Note that the <i>eid_expr</i>s must exactly match those of the rule that is to be modified, including any terminating wild-card character.</p>
+
+</dd>
+<dt id="d-bspbibrule-source_eid_expr-destination_eid_expr-block_type_number"><b>d bspbibrule</b> <i>source_eid_expr</i> <i>destination_eid_expr</i> <i>block_type_number</i></dt>
+<dd>
+
+<p>The <b>delete bspbibrule</b> command. This command deletes the BIB rule pertaining to the source/destination EID expression pair identified by <i>sender_eid_expr</i> and <i>receiver_eid_expr</i> and the block identified by <i>block_type_number</i>. Note that the <i>eid_expr</i>s must exactly match those of the rule that is to be deleted, including any terminating wild-card character.</p>
+
+</dd>
+<dt id="i-bspbibrule-source_eid_expr-destination_eid_expr-block_type_number"><b>i bspbibrule</b> <i>source_eid_expr</i> <i>destination_eid_expr</i> <i>block_type_number</i></dt>
+<dd>
+
+<p>This command will print information (the ciphersuite and key names) about the BIB rule pertaining to <i>source_eid_expr</i>, <i>destination_eid_expr</i>, and <i>block_type_number</i>.</p>
+
+</dd>
+<dt id="l-bspbibrule"><b>l bspbibrule</b></dt>
+<dd>
+
+<p>This command lists all BIB rules in the security policy database.</p>
+
+</dd>
+<dt id="a-bspbcbrule-source_eid_expr-destination_eid_expr-block_type_number-ciphersuite_name-key_name"><b>a bspbcbrule</b> <i>source_eid_expr</i> <i>destination_eid_expr</i> <i>block_type_number</i> <i>{ &#39;&#39; | ciphersuite_name key_name }</i></dt>
+<dd>
+
+<p>The <b>add bspbcbrule</b> command. This command adds a rule specifying the manner in which Block Confidentiality Block (BCB) encryption will be applied to blocks of type <i>block_type_number</i> for all bundles sourced at any node whose administrative endpoint ID matches <i>source_eid_expr</i> and destined for any node whose administrative endpoint ID ID matches <i>destination_eid_expr</i>.</p>
+
+<p>If a zero-length string (&#39;&#39;) is indicated instead of a <i>ciphersuite_name</i> then BCB encryption is disabled for this source/destination EID expression pair: blocks of the type indicated by <i>block_type_number</i> in all bundles sourced at nodes with matching administrative endpoint IDs and destined for nodes with matching administrative endpoint IDs will be sent in plain text. Otherwise, a block of the indicated type that is attached to a bundle sourced at a node with matching administrative endpoint ID and destined for a node with matching administrative endpoint ID can only be deemed decrypted if the bundle contains a corresponding BCB computed via the ciphersuite named by <i>ciphersuite_name</i> using a key value that is identical to the current value of the key named <i>key_name</i> in the local security policy database.</p>
+
+</dd>
+<dt id="c-bspbcbrule-source_eid_expr-destination_eid_expr-block_type_number-ciphersuite_name-key_name"><b>c bspbcbrule</b> <i>source_eid_expr</i> <i>destination_eid_expr</i> <i>block_type_number</i> <i>{ &#39;&#39; | ciphersuite_name key_name }</i></dt>
+<dd>
+
+<p>The <b>change bspbcbrule</b> command. This command changes the ciphersuite name and/or key name for the BCB rule pertaining to the source/destination EID expression pair identified by <i>source_eid_expr</i> and <i>destination_eid_expr</i> and the block identified by <i>block_type_number</i>. Note that the <i>eid_expr</i>s must exactly match those of the rule that is to be modified, including any terminating wild-card character.</p>
+
+</dd>
+<dt id="d-bspbcbrule-source_eid_expr-destination_eid_expr-block_type_number"><b>d bspbcbrule</b> <i>source_eid_expr</i> <i>destination_eid_expr</i> <i>block_type_number</i></dt>
+<dd>
+
+<p>The <b>delete bspbcbrule</b> command. This command deletes the BCB rule pertaining to the source/destination EID expression pair identified by <i>sender_eid_expr</i> and <i>receiver_eid_expr</i> and the block identified by <i>block_type_number</i>. Note that the <i>eid_expr</i>s must exactly match those of the rule that is to be deleted, including any terminating wild-card character.</p>
+
+</dd>
+<dt id="i-bspbcbrule-source_eid_expr-destination_eid_expr-block_type_number"><b>i bspbcbrule</b> <i>source_eid_expr</i> <i>destination_eid_expr</i> <i>block_type_number</i></dt>
+<dd>
+
+<p>This command will print information (the ciphersuite and key names) about the BCB rule pertaining to <i>source_eid_expr</i>, <i>destination_eid_expr</i>, and <i>block_type_number</i>.</p>
+
+</dd>
+<dt id="l-bspbcbrule"><b>l bspbcbrule</b></dt>
+<dd>
+
+<p>This command lists all BCB rules in the security policy database.</p>
+
+</dd>
+<dt id="a-ltprecvauthrule-ltp_engine_id-ciphersuite_nbr-key_name"><b>a ltprecvauthrule</b> <i>ltp_engine_id</i> <i>ciphersuite_nbr</i> <i>[key_name]</i></dt>
+<dd>
+
+<p>The <b>add ltprecvauthrule</b> command. This command adds a rule specifying the manner in which LTP segment authentication will be applied to LTP segments received from the indicated LTP engine.</p>
+
+<p>A segment from the indicated LTP engine will only be deemed authentic if it contains an authentication extension computed via the ciphersuite identified by <i>ciphersuite_nbr</i> using the applicable key value. If <i>ciphersuite_nbr</i> is 255 then the applicable key value is a hard-coded constant and <i>key_name</i> must be omitted; otherwise <i>key_name</i> is required and the applicable key value is the current value of the key named <i>key_name</i> in the local security policy database.</p>
+
+<p>Valid values of <i>ciphersuite_nbr</i> are:</p>
+
+<ul>
+
+<p>0: HMAC-SHA1-80 1: RSA-SHA256 255: NULL</p>
+
+</ul>
+
+</dd>
+<dt id="c-ltprecvauthrule-ltp_engine_id-ciphersuite_nbr-key_name"><b>c ltprecvauthrule</b> <i>ltp_engine_id</i> <i>ciphersuite_nbr</i> <i>[key_name]</i></dt>
+<dd>
+
+<p>The <b>change ltprecvauthrule</b> command. This command changes the parameters of the LTP segment authentication rule for the indicated LTP engine.</p>
+
+</dd>
+<dt id="d-ltprecvauthrule-ltp_engine_id"><b>d ltprecvauthrule</b> <i>ltp_engine_id</i></dt>
+<dd>
+
+<p>The <b>delete ltprecvauthrule</b> command. This command deletes the LTP segment authentication rule for the indicated LTP engine.</p>
+
+</dd>
+<dt id="i-ltprecvauthrule-ltp_engine_id"><b>i ltprecvauthrule</b> <i>ltp_engine_id</i></dt>
+<dd>
+
+<p>This command will print information (the LTP engine id, ciphersuite number, and key name) about the LTP segment authentication rule for the indicated LTP engine.</p>
+
+</dd>
+<dt id="l-ltprecvauthrule"><b>l ltprecvauthrule</b></dt>
+<dd>
+
+<p>This command lists all LTP segment authentication rules in the security policy database.</p>
+
+</dd>
+<dt id="a-ltpxmitauthrule-ltp_engine_id-ciphersuite_nbr-key_name"><b>a ltpxmitauthrule</b> <i>ltp_engine_id</i> <i>ciphersuite_nbr</i> <i>[key_name]</i></dt>
+<dd>
+
+<p>The <b>add ltpxmitauthrule</b> command. This command adds a rule specifying the manner in which LTP segments transmitted to the indicated LTP engine must be signed.</p>
+
+<p>Signing a segment destined for the indicated LTP engine entails computing an authentication extension via the ciphersuite identified by <i>ciphersuite_nbr</i> using the applicable key value. If <i>ciphersuite_nbr</i> is 255 then the applicable key value is a hard-coded constant and <i>key_name</i> must be omitted; otherwise <i>key_name</i> is required and the applicable key value is the current value of the key named <i>key_name</i> in the local security policy database.</p>
+
+<p>Valid values of <i>ciphersuite_nbr</i> are:</p>
+
+<ul>
+
+<p>0: HMAC_SHA1-80 1: RSA_SHA256 255: NULL</p>
+
+</ul>
+
+</dd>
+<dt id="c-ltpxmitauthrule-ltp_engine_id-ciphersuite_nbr-key_name"><b>c ltpxmitauthrule</b> <i>ltp_engine_id</i> <i>ciphersuite_nbr</i> <i>[key_name]</i></dt>
+<dd>
+
+<p>The <b>change ltpxmitauthrule</b> command. This command changes the parameters of the LTP segment signing rule for the indicated LTP engine.</p>
+
+</dd>
+<dt id="d-ltpxmitauthrule-ltp_engine_id"><b>d ltpxmitauthrule</b> <i>ltp_engine_id</i></dt>
+<dd>
+
+<p>The <b>delete ltpxmitauthrule</b> command. This command deletes the LTP segment signing rule for the indicated LTP engine.</p>
+
+</dd>
+<dt id="i-ltpxmitauthrule-ltp_engine_id"><b>i ltpxmitauthrule</b> <i>ltp_engine_id</i></dt>
+<dd>
+
+<p>This command will print information (the LTP engine id, ciphersuite number, and key name) about the LTP segment signing rule for the indicated LTP engine.</p>
+
+</dd>
+<dt id="l-ltpxmitauthrule"><b>l ltpxmitauthrule</b></dt>
+<dd>
+
+<p>This command lists all LTP segment signing rules in the security policy database.</p>
+
+</dd>
+<dt id="x-sender_eid_expr-receiver_eid_expr-bab-pib-pcb-esb"><b>x</b> <i>[ { ~ | sender_eid_expr } [ { ~ | receiver_eid_expr} [ { ~ | bab | pib | pcb | esb } ] ] ]</i></dt>
+<dd>
+
+<p>This command will clear all rules for the indicated type of bundle security block between the indicated security source and security destination. If block type is omitted it defaults to <b>~</b> signifying &quot;all BSP blocks&quot;. If both block type and security destination are omitted, security destination defaults to <b>~</b> signifying &quot;all BSP security destinations&quot;. If all three command-line parameters are omitted, then security source defaults to <b>~</b> signifying &quot;all BSP security sources&quot;.</p>
+
+</dd>
+<dt id="h"><b>h</b></dt>
+<dd>
+
+<p>The <b>help</b> command. This will display a listing of the commands and their formats. It is the same as the <b>?</b> command.</p>
+
+</dd>
+</dl>
+
+<h1 id="EXAMPLES">EXAMPLES</h1>
+
+<dl>
+
+<dt id="a-key-BABKEY-.-babkey.txt">a key BABKEY ./babkey.txt</dt>
+<dd>
+
+<p>Adds a new key named &quot;BABKEY&quot; whose value is the content of the file &quot;./babkey.txt&quot;.</p>
+
+</dd>
+<dt id="a-bspbabrule-ipn:19.-ipn:11.-HMAC_SHA1-BABKEY">a bspbabrule ipn:19.* ipn:11.* HMAC_SHA1 BABKEY</dt>
+<dd>
+
+<p>Adds a BAB rule requiring that all bundles sent from node number 19 to node number 11 contain Bundle Authentication Blocks computed via the HMAC_SHA1 ciphersuite using a key value that is identical to the current value of the key named &quot;BABKEY&quot; in the local security policy database.</p>
+
+</dd>
+<dt id="c-bspbabrule-ipn:19.-ipn:11">c bspbabrule ipn:19.* ipn:11.* &#39;&#39;</dt>
+<dd>
+
+<p>Changes the BAB rule pertaining to all bundles sent from node number 19 to node number 11. BAB checking is disabled; these bundles will be automatically deemed authentic.</p>
+
+</dd>
+</dl>
+
+<h1 id="SEE-ALSO">SEE ALSO</h1>
+
+<p>ionsecadmin(1)</p>
+
+
+</body>
+
+</html>
+
+

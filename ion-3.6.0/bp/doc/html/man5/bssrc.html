@@ -1,0 +1,275 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body>
+
+
+
+<h1 id="NAME">NAME</h1>
+
+<p>bssrc - IPN scheme configuration commands file adapted for Bundle Streaming Service</p>
+
+<h1 id="DESCRIPTION">DESCRIPTION</h1>
+
+<p>IPN scheme configuration commands are passed to <b>bssadmin</b> either in a file of text lines or interactively at <b>bssadmin</b>&#39;s command prompt (:). Commands are interpreted line-by line, with exactly one command per line.</p>
+
+<p>IPN scheme configuration commands (a) manage a table of destination endpoints that are known to be associated with Bundle Streaming Service (BSS) applications, (b) establish BSS-adapted egress plans for direct transmission to neighboring nodes that are members of endpoints identified in the &quot;ipn&quot; URI scheme, and (c) establish static default routing rules for forwarding bundles to specified destination nodes.</p>
+
+<p>A BSS endpoint table <b>entry</b> identifies an IPN endpoint ID -- in which the node number and/or service number may be the wild-card character &#39;*&#39; -- that is known to be associated with a BSS application. These table entries enable <b>bssfw</b> to distinguish BSS bundles from non-BSS traffic and apply BSS-specific egress planning logic to the former while handling the latter in exactly the same way as <b>ipnfw</b>.</p>
+
+<p>The egress <b>plan</b> established for a given neighboring node associates three default egress <b>duct expressions</b> with that node: one for BSS traffic that must be forwarded as real-time streaming data (using a convergence-layer protocol that does not perform retransmission), one for BSS traffic that must be forwarded as playback data (using a reliable convergence-layer protocol), and one for non-BSS traffic. These default duct expressions may be overridden by more narrowly scoped <b>planrule</b>s in specific circumstances: different egress duct expressions may apply when the source endpoint for the subject bundle identifies a specific node, a specific service, or both.</p>
+
+<p>Each duct expression is a string of the form &quot;<i>protocol_name</i>/<i>outduct_name</i>[,<i>destination_induct_name</i>]&quot;, signifying that the bundle is to be queued for transmission via the indicated convergence layer protocol outduct. <i>destination_induct_name</i> must be provided when the indicated outduct is &quot;promiscuous&quot;, i.e., not configured for transmission only to a single neighboring node; this is protocol-specific.</p>
+
+<p>The circumstances that characterize a specific rule within a general plan are expressed in a <b>qualifier</b>, a string of the form &quot;<i>source_service_number</i> <i>source_node_number</i>&quot; where either <i>source_service_number</i> or <i>source_node_number</i> may be an asterisk character (*) signifying &quot;all&quot;.</p>
+
+<p>Note that egress plans <b>must</b> be established for all neighboring nodes, regardless of whether or not contact graph routing is used for computing dynamic routes to distant nodes. This is by definition: if there isn&#39;t an egress plan to a node, it can&#39;t be considered a neighbor.</p>
+
+<p>Static default routes are expressed as <b>groups</b> in the ipn-scheme routing database. A group is a range of node numbers identifying a set of nodes for which defined default routing behavior is established. Whenever a bundle is to be forwarded to a node whose number is in the group&#39;s node number range <b>and</b> it has not been possible to compute a dynamic route to that node from the contact schedules that have been provided to the local node <b>and</b> that node is not a neighbor to which the bundle can be directly transmitted, BP will forward the bundle to the <b>gateway</b> node associated with this group. The gateway node for any group is identified by an endpoint ID, which might or might not be an ipn-scheme EID; regardless, directing a bundle to the gateway for a group causes the bundle to be re-forwarded to that intermediate destination endpoint. Multiple groups may encompass the same node number, in which case the gateway associated with the most restrictive group (the one with the smallest range) is always selected.</p>
+
+<p>The formats and effects of the BSS forwarding configuration commands are described below.</p>
+
+<h1 id="GENERAL-COMMANDS">GENERAL COMMANDS</h1>
+
+<dl>
+
+<dt id="pod"><b>?</b></dt>
+<dd>
+
+<p>The <b>help</b> command. This will display a listing of the commands and their formats. It is the same as the <b>h</b> command.</p>
+
+</dd>
+<dt id="pod1"><b>#</b></dt>
+<dd>
+
+<p>Comment line. Lines beginning with <b>#</b> are not interpreted.</p>
+
+</dd>
+<dt id="e-1-0"><b>e</b> { 1 | 0 }</dt>
+<dd>
+
+<p>Echo control. Setting echo to 1 causes all output printed by bssadmin to be logged as well as sent to stdout. Setting echo to 0 disables this behavior.</p>
+
+</dd>
+<dt id="v"><b>v</b></dt>
+<dd>
+
+<p>Version number. Prints out the version of ION currently installed. HINT: combine with <b>e 1</b> command to log the version number at startup.</p>
+
+</dd>
+<dt id="h"><b>h</b></dt>
+<dd>
+
+<p>The <b>help</b> command. This will display a listing of the commands and their formats. It is the same as the <b>?</b> command.</p>
+
+</dd>
+</dl>
+
+<h1 id="ENTRY-COMMANDS">ENTRY COMMANDS</h1>
+
+<dl>
+
+<dt id="a-entry-service_nbr-node_nbr"><b>a entry</b> <i>service_nbr</i> <i>node_nbr</i></dt>
+<dd>
+
+<p>The <b>add entry</b> command. This asserts that all bundles whose destination endpoint ID matches <i>service_nbr</i> and <i>node_nbr</i> (either or both of which may be the wild-card character &#39;*&#39;) are to be processed as BSS traffic.</p>
+
+</dd>
+<dt id="d-entry-service_nbr-node_nbr"><b>d entry</b> <i>service_nbr</i> <i>node_nbr</i></dt>
+<dd>
+
+<p>The <b>delete entry</b> command. This command rescinds a prior BSS assertion characterized by the exact same <i>service_nbr</i> and <i>node_nbr</i>.</p>
+
+</dd>
+<dt id="l-entry"><b>l entry</b></dt>
+<dd>
+
+<p>This command lists all entries in the node&#39;s table of destination endpoint IDs that indicate BSS traffic.</p>
+
+</dd>
+</dl>
+
+<h1 id="PLAN-COMMANDS">PLAN COMMANDS</h1>
+
+<dl>
+
+<dt id="a-plan-node_nbr-non-BSS_duct_expression-BSS_non-reliable_duct_expression-BSS_reliable_duct_expression-custody_expiration_interval"><b>a plan</b> <i>node_nbr</i> <i>non-BSS_duct_expression</i> <i>BSS_non-reliable_duct_expression</i> <i>BSS_reliable_duct_expression</i> <i>custody_expiration_interval</i></dt>
+<dd>
+
+<p>The <b>add plan</b> command. This command establishes an egress plan for the bundles that must be transmitted to the neighboring node identified by <i>node_nbr</i>. <i>custody_expiration_interval</i> indicates the number of seconds the BP agent must wait for custody acceptance after transmitting a bundle on either BSS duct before automatically re-forwarding the bundle. A general plan must be in place for a node before any more specific rules are declared.</p>
+
+</dd>
+<dt id="c-plan-node_nbr-non-BSS_duct_expression-BSS_non-reliable_duct_expression-BSS_reliable_duct_expression-custody_expiration_interval"><b>c plan</b> <i>node_nbr</i> <i>non-BSS_duct_expression</i> <i>BSS_non-reliable_duct_expression</i> <i>BSS_reliable_duct_expression</i> <i>custody_expiration_interval</i></dt>
+<dd>
+
+<p>The <b>change plan</b> command. This command changes the duct expressions and/or custody expiration interval for the indicated plan.</p>
+
+</dd>
+<dt id="d-plan-node_nbr"><b>d plan</b> <i>node_nbr</i></dt>
+<dd>
+
+<p>The <b>delete plan</b> command. This command deletes the egress plan for the node identified by <i>node_nbr</i>, including all associated rules.</p>
+
+</dd>
+<dt id="i-plan-node_nbr"><b>i plan</b> <i>node_nbr</i></dt>
+<dd>
+
+<p>This command will print information (the default duct expressions, custody expiration interval, and all specific rules) about the egress plan for the node identified by <i>node_nbr</i>.</p>
+
+</dd>
+<dt id="l-plan"><b>l plan</b></dt>
+<dd>
+
+<p>This command lists all egress plans established in the BSS database for the local node.</p>
+
+</dd>
+</dl>
+
+<h1 id="PLANRULE-COMMANDS">PLANRULE COMMANDS</h1>
+
+<dl>
+
+<dt id="a-planrule-node_nbr-qualifier-non-BSS_duct_expression-BSS_non-reliable_duct_expression-BSS_reliable_duct_expression"><b>a planrule</b> <i>node_nbr</i> <i>qualifier</i> <i>non-BSS_duct_expression</i> <i>BSS_non-reliable_duct_expression</i> <i>BSS_reliable_duct_expression</i></dt>
+<dd>
+
+<p>The <b>add planrule</b> command. This command establishes a planrule, i.e., a set of duct expressions that override the default duct expressions of the egress plan for the node identified by <i>node_nbr</i> in the event that the source endpoint ID of the subject bundle matches <i>qualifier</i>.</p>
+
+</dd>
+<dt id="c-planrule-node_nbr-qualifier-non-BSS_duct_expression-BSS_non-reliable_duct_expression-BSS_reliable_duct_expression"><b>c planrule</b> <i>node_nbr</i> <i>qualifier</i> <i>non-BSS_duct_expression</i> <i>BSS_non-reliable_duct_expression</i> <i>BSS_reliable_duct_expression</i></dt>
+<dd>
+
+<p>The <b>change planrule</b> command. This command changes the duct expressions for the indicated planrule.</p>
+
+</dd>
+<dt id="d-planrule-node_nbr-qualifier"><b>d planrule</b> <i>node_nbr</i> <i>qualifier</i></dt>
+<dd>
+
+<p>The <b>delete planrule</b> command. This command deletes the planrule identified by <i>node_nbr</i> and <i>qualifier</i>.</p>
+
+</dd>
+<dt id="i-planrule-node_nbr-qualifier"><b>i planrule</b> <i>node_nbr</i> <i>qualifier</i></dt>
+<dd>
+
+<p>This command will print information (the duct expressions) about the planrule identified by <i>node_nbr</i> and <i>qualifier</i>.</p>
+
+</dd>
+<dt id="l-planrule-node_nbr"><b>l planrule</b> <i>node_nbr</i></dt>
+<dd>
+
+<p>This command lists all planrules in the plan for the indicated node.</p>
+
+</dd>
+</dl>
+
+<h1 id="GROUP-COMMANDS">GROUP COMMANDS</h1>
+
+<dl>
+
+<dt id="a-group-first_node_nbr-last_node_nbr-gateway_endpoint_ID"><b>a group</b> <i>first_node_nbr</i> <i>last_node_nbr</i> <i>gateway_endpoint_ID</i></dt>
+<dd>
+
+<p>The <b>add group</b> command. This command establishes a &quot;group&quot; for static default routing as described above.</p>
+
+</dd>
+<dt id="c-group-first_node_nbr-last_node_nbr-gateway_endpoint_ID"><b>c group</b> <i>first_node_nbr</i> <i>last_node_nbr</i> <i>gateway_endpoint_ID</i></dt>
+<dd>
+
+<p>The <b>change group</b> command. This command changes the gateway node number for the group identified by <i>first_node_nbr</i> and <i>last_node_nbr</i> .</p>
+
+</dd>
+<dt id="d-group-first_node_nbr-last_node_nbr"><b>d group</b> <i>first_node_nbr</i> <i>last_node_nbr</i></dt>
+<dd>
+
+<p>The <b>delete group</b> command. This command deletes the group identified by <i>first_node_nbr</i> and <i>last_node_nbr</i>.</p>
+
+</dd>
+<dt id="i-group-first_node_nbr-last_node_nbr"><b>i group</b> <i>first_node_nbr</i> <i>last_node_nbr</i></dt>
+<dd>
+
+<p>This command will print information (the gateway endpoint ID) about the group identified by <i>first_node_nbr</i> and <i>last_node_nbr</i>.</p>
+
+</dd>
+<dt id="l-group"><b>l group</b></dt>
+<dd>
+
+<p>This command lists all groups defined in the BSS database for the local node.</p>
+
+</dd>
+</dl>
+
+<h1 id="GROUPRULE-COMMANDS">GROUPRULE COMMANDS</h1>
+
+<dl>
+
+<dt id="a-grouprule-first_node_nbr-last_node_nbr-qualifier-gateway_endpoint_ID"><b>a grouprule</b> <i>first_node_nbr</i> <i>last_node_nbr</i> <i>qualifier</i> <i>gateway_endpoint_ID</i></dt>
+<dd>
+
+<p>The <b>add grouprule</b> command. This command establishes a grouprule, i.e., a gateway endpoint ID that overrides the default gateway endpoint ID of the group identified by <i>first_node_nbr</i> and <i>last_node_nbr</i> in the event that the source endpoint ID of the subject bundle matches <i>qualifier</i>.</p>
+
+</dd>
+<dt id="c-grouprule-first_node_nbr-last_node_nbr-qualifier-gateway_endpoint_ID"><b>c grouprule</b> <i>first_node_nbr</i> <i>last_node_nbr</i> <i>qualifier</i> <i>gateway_endpoint_ID</i></dt>
+<dd>
+
+<p>The <b>change grouprule</b> command. This command changes the gateway EID for the indicated grouprule.</p>
+
+</dd>
+<dt id="d-grouprule-first_node_nbr-last_node_nbr-qualifier"><b>d grouprule</b> <i>first_node_nbr</i> <i>last_node_nbr</i> <i>qualifier</i></dt>
+<dd>
+
+<p>The <b>delete grouprule</b> command. This command deletes the grouprule identified by <i>first_node_nbr</i>, <i>last_node_nbr</i>, and <i>qualifier</i>.</p>
+
+</dd>
+<dt id="i-grouprule-first_node_nbr-last_node_nbr-qualifier"><b>i grouprule</b> <i>first_node_nbr</i> <i>last_node_nbr</i> <i>qualifier</i></dt>
+<dd>
+
+<p>This command will print information (the duct expression) about the grouprule identified by <i>node_nbr</i>, <i>last_node_nbr</i>, and <i>qualifier</i>.</p>
+
+</dd>
+<dt id="l-grouprule-first_node_nbr-last_node_nbr"><b>l grouprule</b> <i>first_node_nbr</i> <i>last_node_nbr</i></dt>
+<dd>
+
+<p>This command lists all grouprules for the indicated group.</p>
+
+</dd>
+</dl>
+
+<h1 id="EXAMPLES">EXAMPLES</h1>
+
+<dl>
+
+<dt id="a-plan-18-tcp-saturn.nasa.gov:5011-udp-saturn.nasa.gov:5012-tcp-saturn.nasa.gov:5011-3">a plan 18 tcp/saturn.nasa.gov:5011 udp/*,saturn.nasa.gov:5012 tcp/saturn.nasa.gov:5011 3</dt>
+<dd>
+
+<p>Declares the egress plan to use for transmission from the local node to neighboring node 18. Any bundle for which the computed &quot;next hop&quot; node is node 18 will be queued for transmission to Internet host saturn.nasa.gov, using udp if the bundle is real-time BSS traffic and tcp otherwise; for BSS traffic, custodial retransmission will be initiated after 3 seconds if no custody acknowledgment is received.</p>
+
+</dd>
+<dt id="a-planrule-18-9-tcp-saturn.nasa.gov:5011-udp-saturn.nasa.gov:5012-tcp-neptune.nasa.gov:5011">a planrule 18 * 9 tcp/saturn.nasa.gov:5011 udp/*,saturn.nasa.gov:5012 tcp/neptune.nasa.gov:5011</dt>
+<dd>
+
+<p>Declares an egress plan override that applies to transmission to node 18 of any bundle whose source is node 9, regardless of the service that was the source of the bundle. Each such bundle must be queued for transmission to Internet host neptune.nasa.gov, rather than default host saturn.nasa.gov, if it is non-real-time BSS traffic.</p>
+
+</dd>
+<dt id="a-group-1-999-dtn:-stargate">a group 1 999 dtn://stargate</dt>
+<dd>
+
+<p>Declares a default route for bundles destined for all nodes whose numbers are in the range 1 through 999 inclusive: absent any other routing decision, such bundles are to be forwarded to &quot;dtn://stargate&quot;.</p>
+
+</dd>
+</dl>
+
+<h1 id="SEE-ALSO">SEE ALSO</h1>
+
+<p>bssadmin(1)</p>
+
+
+</body>
+
+</html>
+
+

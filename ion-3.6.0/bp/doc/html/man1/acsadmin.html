@@ -1,0 +1,103 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body>
+
+
+
+<h1 id="NAME">NAME</h1>
+
+<p>acsadmin - ION Aggregate Custody Signal (ACS) administration interface</p>
+
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
+
+<p><b>acsadmin</b> [ <i>commands_filename</i> ]</p>
+
+<h1 id="DESCRIPTION">DESCRIPTION</h1>
+
+<p><b>acsadmin</b> configures aggregate custody signal behavior for the local ION node.</p>
+
+<p>It operates in response to ACS configuration commands found in the file <i>commands_filename</i>, if provided; if not, <b>acsadmin</b> prints a simple prompt (:) so that the user may type commands directly into standard input.</p>
+
+<p>The format of commands for <i>commands_filename</i> can be queried from <b>acsadmin</b> with the &#39;h&#39; or &#39;?&#39; commands at the prompt. The commands are documented in acsrc(5).</p>
+
+<h1 id="EXIT-STATUS">EXIT STATUS</h1>
+
+<dl>
+
+<dt id="Successful-completion-of-ACS-administration">&quot;0&quot; Successful completion of ACS administration.</dt>
+<dd>
+
+</dd>
+</dl>
+
+<h1 id="EXAMPLES">EXAMPLES</h1>
+
+<dl>
+
+<dt id="acsadmin">acsadmin</dt>
+<dd>
+
+<p>Enter interactive ACS configuration command entry mode.</p>
+
+</dd>
+<dt id="acsadmin-host1.acs">acsadmin host1.acs</dt>
+<dd>
+
+<p>Execute all configuration commands in <i>host1.acs</i>, then terminate immediately.</p>
+
+</dd>
+</dl>
+
+<h1 id="FILES">FILES</h1>
+
+<p>See acsrc(5) for details of the ACS configuration commands.</p>
+
+<h1 id="ENVIRONMENT">ENVIRONMENT</h1>
+
+<p>No environment variables apply.</p>
+
+<h1 id="DIAGNOSTICS">DIAGNOSTICS</h1>
+
+<p><b>Note</b>: all ION administration utilities expect source file input to be lines of ASCII text that are NL-delimited. If you edit the acsrc file on a Windows machine, be sure to <b>use dos2unix to convert it to Unix text format</b> before presenting it to <b>acsadmin</b>. Otherwise <b>acsadmin</b> will detect syntax errors and will not function satisfactorily.</p>
+
+<p>The following diagnostics may be issued to the logfile ion.log:</p>
+
+<dl>
+
+<dt id="acsadmin-cant-attach-to-ION">acsadmin can&#39;t attach to ION.</dt>
+<dd>
+
+<p>There is no SDR data store for <i>acsadmin</i> to use. You should run ionadmin(1) first, to set up an SDR data store for ION.</p>
+
+</dd>
+<dt id="Cant-open-command-file">Can&#39;t open command file...</dt>
+<dd>
+
+<p>The <i>commands_filename</i> specified in the command line doesn&#39;t exist.</p>
+
+</dd>
+</dl>
+
+<p>Various errors that don&#39;t cause <b>acsadmin</b> to fail but are noted in the <b>ion.log</b> log file may be caused by improperly formatted commands given at the prompt or in the <i>commands_filename</i> file. Please see acsrc(5) for details.</p>
+
+<h1 id="BUGS">BUGS</h1>
+
+<p>Report bugs to &lt;ion-bugs@korgano.eecs.ohiou.edu&gt;</p>
+
+<h1 id="SEE-ALSO">SEE ALSO</h1>
+
+<p>ionadmin(1), bpadmin(1), acsrc(5)</p>
+
+
+</body>
+
+</html>
+
+

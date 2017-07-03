@@ -1,0 +1,103 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body>
+
+
+
+<h1 id="NAME">NAME</h1>
+
+<p>tcpclo - DTN TCPCL-compliant convergence layer adapter output task</p>
+
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
+
+<p><b>tcpclo</b> <i>remote_hostname</i>[:<i>remote_port_nbr</i>]</p>
+
+<h1 id="DESCRIPTION">DESCRIPTION</h1>
+
+<p><b>tcpclo</b> is a background &quot;daemon&quot; task that connects to a remote node&#39;s TCP socket at <i>remote_hostname</i> and <i>remote_port_nbr</i>. It sends a contact header, and it records the acknowledgement flag, reactive fragmentation flag and negative acknowledgements flag in the contact header it receives from its peer <b>tcpcli</b> task. It then begins extracting bundles from the queues of bundles ready for transmission via TCP to this remote bundle protocol agent and transmitting those bundles over the connected socket to that node. Each transmitted bundle is preceded by message type, segmentation flags, and an SDNV indicating the size of the bundle (in bytes).</p>
+
+<p>If not specified, <i>remote_port_nbr</i> defaults to 4556.</p>
+
+<p>Note that <b>tcpclo</b> is not a &quot;promiscuous&quot; convergence layer daemon: it can transmit bundles only to the node to which it is connected, so scheme configuration directives that cite this outduct need only provide the protocol name and the outduct name as specified on the command line when <b>tcpclo</b> is started.</p>
+
+<p><b>tcpclo</b> is spawned automatically by <b>bpadmin</b> in response to the &#39;s&#39; (START) command that starts operation of the Bundle Protocol, and it is terminated by <b>bpadmin</b> in response to an &#39;x&#39; (STOP) command. <b>tcpclo</b> can also be spawned and terminated in response to START and STOP commands that pertain specifically to the TCP convergence layer protocol.</p>
+
+<h1 id="EXIT-STATUS">EXIT STATUS</h1>
+
+<dl>
+
+<dt id="pod0">&quot;0&quot;</dt>
+<dd>
+
+<p><b>tcpclo</b> terminated normally, for reasons noted in the <b>ion.log</b> file. If this termination was not commanded, investigate and solve the problem identified in the log file and use <b>bpadmin</b> to restart the TCPCL protocol.</p>
+
+</dd>
+<dt id="pod1">&quot;1&quot;</dt>
+<dd>
+
+<p><b>tcpclo</b> terminated abnormally, for reasons noted in the <b>ion.log</b> file. Investigate and solve the problem identified in the log file, then use <b>bpadmin</b> to restart the TCPCL protocol.</p>
+
+</dd>
+</dl>
+
+<h1 id="FILES">FILES</h1>
+
+<p>No configuration files are needed.</p>
+
+<h1 id="ENVIRONMENT">ENVIRONMENT</h1>
+
+<p>No environment variables apply.</p>
+
+<h1 id="DIAGNOSTICS">DIAGNOSTICS</h1>
+
+<p>The following diagnostics may be issued to the <b>ion.log</b> log file:</p>
+
+<dl>
+
+<dt id="tcpclo-cant-attach-to-BP">tcpclo can&#39;t attach to BP.</dt>
+<dd>
+
+<p><b>bpadmin</b> has not yet initialized Bundle Protocol operations.</p>
+
+</dd>
+<dt id="No-such-tcp-duct">No such tcp duct.</dt>
+<dd>
+
+<p>No TCP outduct with duct name matching <i>remote_hostname</i> and <i>remote_port_nbr</i> has been added to the BP database. Use <b>bpadmin</b> to stop the TCP convergence-layer protocol, add the outduct, and then restart the TCP protocol.</p>
+
+</dd>
+<dt id="CLO-task-is-already-started-for-this-duct">CLO task is already started for this duct.</dt>
+<dd>
+
+<p>Redundant initiation of <b>tcpclo</b>.</p>
+
+</dd>
+<dt id="Cant-get-IP-address-for-host">Can&#39;t get IP address for host</dt>
+<dd>
+
+<p>Operating system error. Check errtext, correct problem, and restart TCP.</p>
+
+</dd>
+</dl>
+
+<h1 id="BUGS">BUGS</h1>
+
+<p>Report bugs to &lt;ion-bugs@korgano.eecs.ohiou.edu&gt;</p>
+
+<h1 id="SEE-ALSO">SEE ALSO</h1>
+
+<p>bpadmin(1), bprc(5), tcpcli(1)</p>
+
+
+</body>
+
+</html>
+
+

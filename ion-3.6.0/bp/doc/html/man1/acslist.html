@@ -1,0 +1,93 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body>
+
+
+
+<h1 id="NAME">NAME</h1>
+
+<p>acslist - Aggregate Custody Signals (ACS) utility for checking custody IDs.</p>
+
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
+
+<p><b>acslist</b> [<i>-s|--stdout</i>]</p>
+
+<h1 id="DESCRIPTION">DESCRIPTION</h1>
+
+<p><b>acslist</b> is a utility program that lists all mappings from bundle ID to custody ID currently in the local bundle agent&#39;s ACS ID database, in no specific order. A bundle ID (defined in RFC5050) is the tuple of (source EID, creation time, creation count, fragment offset, fragment length). A custody ID (defined in draft-jenkins-aggregate-custody-signals) is an integer that the local bundle agent will be able to map to a bundle ID for the purposes of aggregating and compressing custody signals.</p>
+
+<p>The format for mappings is:</p>
+
+<p>(ipn:13.1,333823688,95,0,0)-&gt;(26)</p>
+
+<p>While listing, <b>acslist</b> also checks the custody ID database for self-consistency, and if it detects any errors it will print a line starting with &quot;Mismatch:&quot; and describing the error.</p>
+
+<p><i>-s|--stdout</i> tells <b>acslist</b> to print results to stdout, rather than to the ION log.</p>
+
+<h1 id="EXIT-STATUS">EXIT STATUS</h1>
+
+<dl>
+
+<dt id="pod0">&quot;0&quot;</dt>
+<dd>
+
+<p><b>acslist</b> terminated after verifying the consistency of the custody ID database.</p>
+
+</dd>
+<dt id="pod1">&quot;1&quot;</dt>
+<dd>
+
+<p><b>acslist</b> was unable to attach to the ACS database, or it detected an inconsistency.</p>
+
+</dd>
+</dl>
+
+<h1 id="FILES">FILES</h1>
+
+<p>No configuration files are needed.</p>
+
+<h1 id="ENVIRONMENT">ENVIRONMENT</h1>
+
+<p>No environment variables apply.</p>
+
+<h1 id="DIAGNOSTICS">DIAGNOSTICS</h1>
+
+<p>The following diagnostics may be issued:</p>
+
+<dl>
+
+<dt id="Cant-attach-to-ACS">Can&#39;t attach to ACS.</dt>
+<dd>
+
+<p><b>acsadmin</b> has not yet initialized ACS operations.</p>
+
+</dd>
+<dt id="Mismatch:-description-of-the-mismatch">Mismatch: (description of the mismatch)</dt>
+<dd>
+
+<p><b>acslist</b> detected an inconsistency in the database; this is a bug in ACS.</p>
+
+</dd>
+</dl>
+
+<h1 id="BUGS">BUGS</h1>
+
+<p>Report bugs to &lt;ion-bugs@korgano.eecs.ohiou.edu&gt;</p>
+
+<h1 id="SEE-ALSO">SEE ALSO</h1>
+
+<p>acsadmin(1), bplist(1)</p>
+
+
+</body>
+
+</html>
+
+
