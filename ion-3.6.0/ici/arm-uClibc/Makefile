@@ -14,7 +14,10 @@ CC = $(CROSS_COMPILE_APPS)gcc $(OPT)
 CC += -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/
 CC += -I$(SRC) -I$(TEST) -I$(SDR) -I$(INCL) -I../crypto
 LDFLAGS = -fPIC -shared
-LD = $(TLD) $(LDFLAGS)
+#LD = $(TLD) $(LDFLAGS)
+LD = $(TLD) ar rcs
+PTHREADS = -L/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/lib -pthread
+
 
 LIBICIOBJS = \
 	llcv.o \
@@ -74,7 +77,7 @@ UTILITIES = sdrwatch psmwatch ionadmin ionsecadmin sdrmend ionwarn
 
 TESTPGMS = file2sm sm2file file2sdr sdr2file psmshell smlistsh smrbtsh owltsim owlttb
 
-ALL = check libici.so libicinm.so rfxclock $(UTILITIES) $(TESTPGMS)
+ALL = check libici.a libicinm.a rfxclock $(UTILITIES) $(TESTPGMS)
 
 all:		$(ALL)
 
@@ -97,83 +100,83 @@ install:
 
 #	-	-	Utility executables	-	-	-	-
 
-sdrwatch:	sdrwatch.o libici.so
-		$(CC) -o sdrwatch sdrwatch.o -L./lib -lici -lpthread -lm
+sdrwatch:	sdrwatch.o libici.a
+		$(CC) -o sdrwatch sdrwatch.o -L./lib -lici $(PTHREADS) -lm
 		cp sdrwatch ./bin
 
-sdrmend:	sdrmend.o libici.so
-		$(CC) -o sdrmend sdrmend.o -L./lib -lici -lpthread -lm
+sdrmend:	sdrmend.o libici.a
+		$(CC) -o sdrmend sdrmend.o -L./lib -lici $(PTHREADS) -lm
 		cp sdrmend ./bin
 
-psmwatch:	psmwatch.o libici.so
-		$(CC) -o psmwatch psmwatch.o -L./lib -lici -lpthread -lm
+psmwatch:	psmwatch.o libici.a
+		$(CC) -o psmwatch psmwatch.o -L./lib -lici $(PTHREADS) -lm
 		cp psmwatch ./bin
 
-ionadmin:	ionadmin.o libici.so
-		$(CC) -o ionadmin ionadmin.o -L./lib -lici -lpthread -lm
+ionadmin:	ionadmin.o libici.a
+		$(CC) -o ionadmin ionadmin.o -L./lib -lici $(PTHREADS) -lm
 		cp ionadmin ./bin
 
-ionwarn:	ionwarn.o libici.so
-		$(CC) -o ionwarn ionwarn.o -L./lib -lici -lpthread -lm
+ionwarn:	ionwarn.o libici.a
+		$(CC) -o ionwarn ionwarn.o -L./lib -lici $(PTHREADS) -lm
 		cp ionwarn ./bin
 
-ionsecadmin:	ionsecadmin.o libici.so
-		$(CC) -o ionsecadmin ionsecadmin.o -L./lib -lici -lpthread -lm
+ionsecadmin:	ionsecadmin.o libici.a
+		$(CC) -o ionsecadmin ionsecadmin.o -L./lib -lici $(PTHREADS) -lm
 		cp ionsecadmin ./bin
 
 #	-	-	Test executables	-	-	-	-
 
-psmshell:	psmshell.o libici.so
-		$(CC) -o psmshell psmshell.o -L./lib -lici -lpthread -lm
+psmshell:	psmshell.o libici.a
+		$(CC) -o psmshell psmshell.o -L./lib -lici $(PTHREADS) -lm
 		cp psmshell ./bin
 
-smlistsh:	smlistsh.o libici.so
-		$(CC) -o smlistsh smlistsh.o -L./lib -lici -lpthread -lm
+smlistsh:	smlistsh.o libici.a
+		$(CC) -o smlistsh smlistsh.o -L./lib -lici $(PTHREADS) -lm
 		cp smlistsh ./bin
 
-smrbtsh:	smrbtsh.o libici.so
-		$(CC) -o smrbtsh smrbtsh.o -L./lib -lici -lpthread -lm
+smrbtsh:	smrbtsh.o libici.a
+		$(CC) -o smrbtsh smrbtsh.o -L./lib -lici $(PTHREADS) -lm
 		cp smrbtsh ./bin
 
-file2sm:	file2sm.o libici.so
-		$(CC) -I. -o file2sm file2sm.o -L./lib -lici -lpthread -lm
+file2sm:	file2sm.o libici.a
+		$(CC) -I. -o file2sm file2sm.o -L./lib -lici $(PTHREADS) -lm
 		cp file2sm ./bin
 
-sm2file:	sm2file.o libici.so
-		$(CC) -I. -o sm2file sm2file.o -L./lib -lici -lpthread -lm
+sm2file:	sm2file.o libici.a
+		$(CC) -I. -o sm2file sm2file.o -L./lib -lici $(PTHREADS) -lm
 		cp sm2file ./bin
 
-file2sdr:	file2sdr.o libici.so
-		$(CC) -I. -o file2sdr file2sdr.o -L./lib -lici -lpthread -lm
+file2sdr:	file2sdr.o libici.a
+		$(CC) -I. -o file2sdr file2sdr.o -L./lib -lici $(PTHREADS) -lm
 		cp file2sdr ./bin
 
-sdr2file:	sdr2file.o libici.so
-		$(CC) -o sdr2file sdr2file.o -L./lib -lici -lpthread -lm
+sdr2file:	sdr2file.o libici.a
+		$(CC) -o sdr2file sdr2file.o -L./lib -lici $(PTHREADS) -lm
 		cp sdr2file ./bin
 
-owltsim:	owltsim.o libici.so
-		$(CC) -o owltsim owltsim.o -L./lib -lici -lpthread -lm
+owltsim:	owltsim.o libici.a
+		$(CC) -o owltsim owltsim.o -L./lib -lici $(PTHREADS) -lm
 		cp owltsim ./bin
 
-owlttb:		owlttb.o libici.so
-		$(CC) -o owlttb owlttb.o -L./lib -lici -lpthread -lm
+owlttb:		owlttb.o libici.a
+		$(CC) -o owlttb owlttb.o -L./lib -lici $(PTHREADS) -lm
 		cp owlttb ./bin
 
 #	-	-	Daemon executable	-	-	-	-
 
-rfxclock:	rfxclock.o libici.so
-		$(CC) -I. -o rfxclock rfxclock.o -L./lib -lici -lpthread -lm
+rfxclock:	rfxclock.o libici.a
+		$(CC) -I. -o rfxclock rfxclock.o -L./lib -lici $(PTHREADS) -lm
 		cp rfxclock ./bin
 
 #	-	-	Libraries	-	-	-	-	-
 
-libici.so:	$(LIBICIOBJS)
-		$(LD) -o libici.so $(LIBICIOBJS)
-		cp libici.so ./lib
+libici.a:	$(LIBICIOBJS)
+		$(LD) libici.a $(LIBICIOBJS)
+		cp libici.a ./lib
 
-libicinm.so:	libicinm.o $(INCL)/icinm.h
-		$(LD) -o libicinm.so libicinm.o
-		cp libicinm.so ./lib
+libicinm.a:	libicinm.o $(INCL)/icinm.h
+		$(LD) libicinm.a libicinm.o
+		cp libicinm.a ./lib
 
 #	-	-	Object modules	-	-	-	-	-
 
