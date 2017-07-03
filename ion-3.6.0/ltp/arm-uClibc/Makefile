@@ -14,7 +14,8 @@ CC = $(CROSS_COMPILE_APPS)gcc $(OPT)
 CC += -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/
 CC += -I$(API) -I$(API)/ext -I$(API)/ext/auth -I$(INCL) -I$(ROOT)/include
 LDFLAGS = -fPIC -shared
-LD = $(TLD) $(LDFLAGS)
+LD = $(TLD) ar rcs
+PTHREADS = -L/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/lib -pthread
 
 PUBINCLS = \
 	$(INCL)/ltp.h \
@@ -28,7 +29,7 @@ LTPINCLS = \
 RUNTIMES = ltpadmin ltpclock ltpmeter udplsi udplso ltpdriver ltpcounter sdatest
 #dccplsi dccplso
 
-ALL = check libltp.so $(RUNTIMES)
+ALL = check libltp.a $(RUNTIMES)
 
 all:		$(ALL)
 
@@ -51,58 +52,58 @@ install:
 
 #	-	-	Daemon executables	-	-	-	-
 
-ltpclock:	ltpclock.o libltp.so
-		$(CC) -o ltpclock ltpclock.o -L./lib -L$(ROOT)/lib -lltp -lici -lpthread -lm
+ltpclock:	ltpclock.o libltp.a
+		$(CC) -o ltpclock ltpclock.o -L./lib -L$(ROOT)/lib -lltp -lici $(PTHREADS) -lm
 		cp ltpclock ./bin
 
-ltpmeter:	ltpmeter.o libltp.so
-		$(CC) -o ltpmeter ltpmeter.o -L./lib -L$(ROOT)/lib -lltp -lici -lpthread -lm
+ltpmeter:	ltpmeter.o libltp.a
+		$(CC) -o ltpmeter ltpmeter.o -L./lib -L$(ROOT)/lib -lltp -lici $(PTHREADS) -lm
 		cp ltpmeter ./bin
 
 #	-	-	Utility executables	-	-	-	-
 
-ltpadmin:	ltpadmin.o libltp.so
-		$(CC) -o ltpadmin ltpadmin.o -L./lib -L$(ROOT)/lib -lltp -lici -lpthread -lm
+ltpadmin:	ltpadmin.o libltp.a
+		$(CC) -o ltpadmin ltpadmin.o -L./lib -L$(ROOT)/lib -lltp -lici $(PTHREADS) -lm
 		cp ltpadmin ./bin
 
 #	-	-	Test executables	-	-	-	-
 
-ltpdriver:	ltpdriver.o libltp.so
-		$(CC) -o ltpdriver ltpdriver.o -L./lib -L$(ROOT)/lib -lltp -lici -lpthread -lm
+ltpdriver:	ltpdriver.o libltp.a
+		$(CC) -o ltpdriver ltpdriver.o -L./lib -L$(ROOT)/lib -lltp -lici $(PTHREADS) -lm
 		cp ltpdriver ./bin
 
-ltpcounter:	ltpcounter.o libltp.so
-		$(CC) -o ltpcounter ltpcounter.o -L./lib -L$(ROOT)/lib -lltp -lici -lpthread -lm
+ltpcounter:	ltpcounter.o libltp.a
+		$(CC) -o ltpcounter ltpcounter.o -L./lib -L$(ROOT)/lib -lltp -lici $(PTHREADS) -lm
 		cp ltpcounter ./bin
 
-sdatest:	sdatest.o libltp.so
-		$(CC) -o sdatest sdatest.o -L./lib -L$(ROOT)/lib -lltp -lici -lpthread -lm
+sdatest:	sdatest.o libltp.a
+		$(CC) -o sdatest sdatest.o -L./lib -L$(ROOT)/lib -lltp -lici $(PTHREADS) -lm
 		cp sdatest ./bin
 
 #	-	-	UDP executables	-	-	-	-	-
 
-udplsi:		udplsi.o libltp.so
-		$(CC) -o udplsi udplsi.o -L./lib -L$(ROOT)/lib -lltp -lici -lpthread -lm
+udplsi:		udplsi.o libltp.a
+		$(CC) -o udplsi udplsi.o -L./lib -L$(ROOT)/lib -lltp -lici $(PTHREADS) -lm
 		cp udplsi ./bin
 
-udplso:		udplso.o libltp.so
-		$(CC) -o udplso udplso.o -L./lib -L$(ROOT)/lib -lltp -lici -lpthread -lm
+udplso:		udplso.o libltp.a
+		$(CC) -o udplso udplso.o -L./lib -L$(ROOT)/lib -lltp -lici $(PTHREADS) -lm
 		cp udplso ./bin
 
 #	-	-	DCCP executables-	-	-	-	-
-dccplsi:	dccplsi.o libltp.so
-		$(CC) -o dccplsi dccplsi.o -L./lib -L$(ROOT)/lib -lltp -lici -lpthread -lm
+dccplsi:	dccplsi.o libltp.a
+		$(CC) -o dccplsi dccplsi.o -L./lib -L$(ROOT)/lib -lltp -lici $(PTHREADS) -lm
 		cp dccplsi ./bin
 
-dccpplso:	dccplso.o libltp.so
-		$(CC) -o dccplso dccplso.o -L./lib -L$(ROOT)/lib -lltp -lici -lpthread -lm
+dccpplso:	dccplso.o libltp.a
+		$(CC) -o dccplso dccplso.o -L./lib -L$(ROOT)/lib -lltp -lici $(PTHREADS) -lm
 		cp dccplso ./bin
 
 #	-	-	Libraries	-	-	-	-	-
 
-libltp.so:	libltpP.o libltp.o ltpei.o auth.o libltpnm.o libsda.o
-		$(LD) -o libltp.so libltp.o libltpP.o ltpei.o auth.o libltpnm.o libsda.o
-		cp libltp.so ./lib
+libltp.a:	libltpP.o libltp.o ltpei.o auth.o libltpnm.o libsda.o
+		$(LD) libltp.a libltp.o libltpP.o ltpei.o auth.o libltpnm.o libsda.o
+		cp libltp.a ./lib
 
 #	-	-	Object modules	-	-	-	-	-
 
