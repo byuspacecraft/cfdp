@@ -22,6 +22,7 @@
 
 TOP := $(shell /bin/pwd)
 BUILD_OS := $(shell uname)
+LDFLAGS		:= -nostartfiles
 
 BUILD=$(TOP)/build
 INC=-I$(TOP) -I$(TOP)/murmur2
@@ -31,6 +32,7 @@ EOPT += -mcpu=cortex-m3 -mthumb
 CC=$(CROSS_COMPILE_APPS)gcc -Wall $(OPT) $(EOPT) -std=c99
 CC += -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/
 
+
 ifeq ($(MM),)
 MM=-m32
 endif
@@ -38,7 +40,7 @@ endif
 #ifeq ($(BUILD_OS),Linux)
 RPATH=-Wl,-rpath,$(BUILD)
 #SO=so
-SO=o
+SO=a
 #endif
 
 ifeq ($(BUILD_OS),SunOS)
@@ -59,17 +61,19 @@ OPT=-O3
 endif
 
 
-all: $(BUILD)/libbloom.$(SO) $(BUILD)/test-libbloom
+all: $(BUILD)/libbloom.a
 
-$(BUILD)/libbloom.$(SO): $(BUILD)/murmurhash2.o $(BUILD)/bloom.o
-	(cd $(BUILD) && $(CC) bloom.o murmurhash2.o $(LIB) $(MAC) -o libbloom.$(SO))
+$(BUILD)/libbloom.a: $(BUILD)/murmurhash2.o $(BUILD)/bloom.o
+	(cd $(BUILD) && ar rcs libbloom.a bloom.o murmurhash2.o)
 
+$(BUILD)/test-libbloom: $(TESTDIR)/test.c $(BUILD)/$(SO_VERSIONED)
+	$(COM) -I$(TOP) -c $(TESTDIR)/test.c -o $(BUILD)/test.o
+	(cd $(BUILD) && \
+	    $(COM) test.o -L$(BUILD) $(RPATH) -lbloom -o test-libbloom)
 
-#$(BUILD)/libbloom.$(SO): $(BUILD)/bloom.o
-	#(cd $(BUILD) && $(CC) bloom.o $(LIB) $(MAC) -o libbloom.$(SO))
-
-$(BUILD)/test-libbloom: $(BUILD)/libbloom.$(SO) $(BUILD)/test.o
-	(cd $(BUILD) && $(CC) test.o -L$(BUILD) $(RPATH) -lbloom -o test-libbloom)
+$(BUILD)/test-basic: $(TESTDIR)/basic.c $(BUILD)/libbloom.a
+	$(COM) -I$(TOP) $(LIB) \
+	    $(TESTDIR)/basic.c $(BUILD)/libbloom.a -o $(BUILD)/test-basic
 
 $(BUILD)/%.o: %.c
 	mkdir -p $(BUILD)
