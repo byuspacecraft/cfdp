@@ -35,14 +35,18 @@ If necessary, additional branches can be created to meet a need at any of the "b
 Git can be confusing, here are a few tips that have been useful on the project, as well as links to cheat sheets, tutorials and documentation. Feel free to add to this list if you find a useful command, or resource for solving a common problem.
 
 #### Tips
-To create a new branch:  
-``` git branch new-branch-name ```
-
 To list all branches:  
 ```git branch```
 
 To switch between branches:  
 ```git checkout branch-name```
+
+To create a new branch:  
+``` git branch new-branch-name ```
+then checkout that branch:
+```git checkout branch-name```
+then push the new branch to remote repository:
+```git push origin new-branch-name```
 
 To solve a merge conflict:  
 ```git mergetool```
