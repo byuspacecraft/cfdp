@@ -42,13 +42,26 @@ To switch between branches:
 ```git checkout branch-name```
 
 To create a new branch:  
+<<<<<<< HEAD
 ``` git branch new-branch-name ```
 
 then checkout that branch:
 ```git checkout branch-name```
 
 then push the new branch to remote repository:
+=======
+``` git branch new-branch-name ```  
+then checkout that branch:  
+```git checkout branch-name```  
+then push the new branch to remote repository:  
+>>>>>>> aa44d0ba574bf395c500e194409672c3f64b10aa
 ```git push origin new-branch-name```
+
+To tag a commit:  
+```git tag -a <tag name> -m "<tag message>" ```
+
+To list all tags:  
+```git tag```
 
 To solve a merge conflict:  
 ```git mergetool```
@@ -61,9 +74,10 @@ To merge a branch into another branch:
 then  
 ```git merge branch-to-merge-from```
 
+
 #### Cheat sheets
-* [GitHub cheat sheet](https://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf)
-* [Visual Cheat Sheet](http://ndpsoftware.com/git-cheatsheet.html#loc=workspace;)
+* [GitHub cheat sheet] (https://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf)
+* [Visual Cheat Sheet] (http://ndpsoftware.com/git-cheatsheet.html#loc=workspace;)
   * Depicts each stage of the git flow, the second column, *workspace*, is where we typically live as programmers.
 
 #### Documentation
