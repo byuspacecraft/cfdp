@@ -48,6 +48,14 @@ then checkout that branch:
 then push the new branch to remote repository:
 ```git push origin new-branch-name```
 
+To tag a commit:  
+```git tag -l "<tag name>" ```
+
+To list all tags:  
+```git tag```
+
+This is so exciting!!!!!
+
 To solve a merge conflict:  
 ```git mergetool```
 
@@ -58,6 +66,7 @@ To merge a branch into another branch:
 ```git checkout branch-to-merge-to```  
 then  
 ```git merge branch-to-merge-from```
+
 
 #### Cheat sheets
 * [GitHub cheat sheet](https://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf)
