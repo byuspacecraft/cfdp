@@ -25,7 +25,7 @@ CFDPINCLS = \
 
 LBP = -lbp -limcfw -lipnfw -ldtn2fw
 
-RUNTIMES = cfdpadmin cfdpclock bputa cfdptest bpcp bpcpd
+RUNTIMES = cfdpadmin cfdpclock bputa cfdptest
 
 ALL = check libcfdp.a $(RUNTIMES)
 
