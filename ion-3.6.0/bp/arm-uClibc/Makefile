@@ -6,7 +6,7 @@ DAEMON = ../daemon
 CGR = ../cgr
 IPN = ../ipn
 IMC = ../imc
-BSSP = ../bssp
+#BSSP = ../bssp
 DTN2 = ../dtn2
 LTP = ../ltp
 TCP = ../tcp
@@ -36,7 +36,6 @@ BPINCLS = \
 	$(IPN)/ipnfw.h \
 	$(IMC)/imcfw.h \
 	$(IMC)/imcP.h \
-	$(BSSP)/bsspcla.h \
 	$(DTN2)/dtn2fw.h \
 	$(BRS)/brscla.h \
 	$(UDP)/udpcla.h \
@@ -44,6 +43,8 @@ BPINCLS = \
 	$(LTP)/ltpcla.h \
 	$(DCCP)/dccpcla.h \
 	$(API)/acs/acs.h
+
+		#$(BSSP)/bsspcla.h removed from between IMC and DTN2
 
 BPLIBS = \
 	libbp.a
@@ -54,7 +55,8 @@ BPPOBJS = libbpP.o eureka.o bei.o phn.o ecos.o meb.o bae.o acstx.o acsrx.o acsse
 #IPNDOBJS = ipnd.o beacon.o helper.o node.o
 LBP = -lbp -limcfw -lipnfw -ldtn2fw
 
-RUNTIMES = bpadmin bpsink bpsource bpdriver bpecho bpcounter bpsendfile bprecvfile bpclock bptransit bpclm ipnadmin ipnfw ipnadminep dtn2admin dtn2fw dtn2adminep tcpcli tcpclo stcpcli stcpclo brsscla brsccla udpcli udpclo dgrcli dgrclo ltpcli ltpclo lgsend lgagent bptrace bpstats bplist bpcancel hmackeys bping bpstats2 bpchat acsadmin acslist imcadmin imcfw bsspcli bsspclo bibeclo bpnmtest cgrfetch
+# removed from RUNTIMES bsspcli bsspclo
+RUNTIMES = bpadmin bpsink bpsource bpdriver bpecho bpcounter bpsendfile bprecvfile bpclock bptransit bpclm ipnadmin ipnfw ipnadminep dtn2admin dtn2fw dtn2adminep tcpcli tcpclo stcpcli stcpclo brsscla brsccla udpcli udpclo dgrcli dgrclo ltpcli ltpclo lgsend lgagent bptrace bpstats bplist bpcancel hmackeys bping bpstats2 bpchat acsadmin acslist imcadmin imcfw bibeclo bpnmtest cgrfetch
 # dccpcli dccpclo ipnd
 
 ALL = check $(BPLIBS) libcgr.a libipnfw.a libimcfw.a libdtn2fw.a libstcpcla.a libudpcla.a $(RUNTIMES)
@@ -231,13 +233,13 @@ udpclo:		udpclo.o $(BPLIBS) libudpcla.a
 
 #	-	-	BSSP executables	-	-	-	-
 
-bsspcli:	bsspcli.o $(BPLIBS)
-		$(CC) -o bsspcli bsspcli.o -L./lib -L$(ROOT)/lib $(LBP) -lbssp -lbsspP -lici $(PTHREADS) -lm
-		cp bsspcli ./bin
-
-bsspclo:	bsspclo.o $(BPLIBS)
-		$(CC) -o bsspclo bsspclo.o -L./lib -L$(ROOT)/lib $(LBP) -lbssp -lbsspP -lici $(PTHREADS) -lm
-		cp bsspclo ./bin
+# bsspcli:	bsspcli.o $(BPLIBS)
+# 		$(CC) -o bsspcli bsspcli.o -L./lib -L$(ROOT)/lib $(LBP) -lbssp -lbsspP -lici $(PTHREADS) -lm
+# 		cp bsspcli ./bin
+#
+# bsspclo:	bsspclo.o $(BPLIBS)
+# 		$(CC) -o bsspclo bsspclo.o -L./lib -L$(ROOT)/lib $(LBP) -lbssp -lbsspP -lici $(PTHREADS) -lm
+# 		cp bsspclo ./bin
 
 #	-	-	DCCP executables	-	-	-	-
 
@@ -386,8 +388,8 @@ libudpcla.a:	libudpcla.o
 %.o:		$(IMC)/%.c
 		$(CC) -c $<
 
-%.o:		$(BSSP)/%.c
-		$(CC) -c $<
+# %.o:		$(BSSP)/%.c
+# 		$(CC) -c $<
 
 %.o:		$(DTN2)/%.c
 		$(CC) -c $<

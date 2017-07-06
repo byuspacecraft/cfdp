@@ -13,7 +13,8 @@ CC = $(CROSS_COMPILE_APPS)gcc $(OPT)
 CC += -I/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/include/
 CC += -I$(API) -I$(INCL) -I$(ROOT)/include
 LDFLAGS = -fPIC -shared
-LD = $(TLD) $(LDFLAGS)
+LD = $(TLD) ar rcs
+PTHREADS = -L/home/ecestudent/linux-cortexm-1.14.3/A2F/root/usr/lib -pthread
 
 PUBINCLS = \
 	$(INCL)/cfdp.h
@@ -26,7 +27,7 @@ LBP = -lbp -limcfw -lipnfw -ldtn2fw
 
 RUNTIMES = cfdpadmin cfdpclock bputa cfdptest bpcp bpcpd
 
-ALL = check libcfdp.so $(RUNTIMES)
+ALL = check libcfdp.a $(RUNTIMES)
 
 all:		$(ALL)
 
@@ -49,42 +50,42 @@ install:
 
 #	-	-	Daemon executables	-	-	-	-
 
-cfdpclock:	cfdpclock.o libcfdp.so
-		$(CC) -o cfdpclock cfdpclock.o -L./lib -L$(ROOT)/lib -lcfdp $(LBP) -lici -lpthread -lm
+cfdpclock:	cfdpclock.o libcfdp.a
+		$(CC) -o cfdpclock cfdpclock.o -L./lib -L$(ROOT)/lib -lcfdp $(LBP) -lici $(PTHREADS) -lm
 		cp cfdpclock ./bin
 
 #	-	-	Utility executables	-	-	-	-
 
-cfdpadmin:	cfdpadmin.o libcfdp.so
-		$(CC) -o cfdpadmin cfdpadmin.o -L./lib -L$(ROOT)/lib -lcfdp $(LBP) -lici -lpthread -lm
+cfdpadmin:	cfdpadmin.o libcfdp.a
+		$(CC) -o cfdpadmin cfdpadmin.o -L./lib -L$(ROOT)/lib -lcfdp $(LBP) -lici $(PTHREADS) -lm
 		cp cfdpadmin ./bin
 
 #	-	-	Test executables	-	-	-	-
 
-cfdptest:	cfdptest.o libcfdp.so
-		$(CC) -o cfdptest cfdptest.o -L./lib -L$(ROOT)/lib -lcfdp -lcfdp $(LBP) -lici -lpthread -lm
+cfdptest:	cfdptest.o libcfdp.a
+		$(CC) -o cfdptest cfdptest.o -L./lib -L$(ROOT)/lib -lcfdp -lcfdp $(LBP) -lici $(PTHREADS) -lm
 		cp cfdptest ./bin
 
 #	-	-	BP executables	-	-	-	-	-
 
-bputa:		bputa.o libcfdp.so
-		$(CC) -o bputa bputa.o -L./lib -L$(ROOT)/lib -lcfdp $(LBP) -lici -lpthread -lm
+bputa:		bputa.o libcfdp.a
+		$(CC) -o bputa bputa.o -L./lib -L$(ROOT)/lib -lcfdp $(LBP) -lici $(PTHREADS) -lm
 		cp bputa ./bin
 
 #	-	-	BPCP executables	-	-	-	-	-
 bpcp: 		bpcp.o
-		$(CC) -o bpcp bpcp.o -L./lib -L$(ROOT)/lib -lici -lcfdp -lpthread -I$(UTILS) -lm
+		$(CC) -o bpcp bpcp.o -L./lib -L$(ROOT)/lib -lici -lcfdp $(PTHREADS) -I$(UTILS) -lm
 		cp bpcp ./bin
 
 bpcpd: 		bpcpd.o
-		$(CC) -o bpcpd bpcpd.o -L./lib -L$(ROOT)/lib -lici -lcfdp -lpthread -I$(UTILS) -lm
+		$(CC) -o bpcpd bpcpd.o -L./lib -L$(ROOT)/lib -lici -lcfdp $(PTHREADS) -I$(UTILS) -lm
 		cp bpcpd ./bin
 
 #	-	-	Libraries	-	-	-	-	-
 
-libcfdp.so:	libcfdp.o libcfdpP.o libcfdpops.o
-		$(LD) -o libcfdp.so libcfdp.o libcfdpP.o libcfdpops.o
-		cp libcfdp.so ./lib
+libcfdp.a:	libcfdp.o libcfdpP.o libcfdpops.o
+		$(LD) libcfdp.a libcfdp.o libcfdpP.o libcfdpops.o
+		cp libcfdp.a ./lib
 
 #	-	-	Object modules	-	-	-	-	-
 

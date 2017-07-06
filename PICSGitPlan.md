@@ -43,8 +43,10 @@ To switch between branches:
 
 To create a new branch:  
 ``` git branch new-branch-name ```
+
 then checkout that branch:
 ```git checkout branch-name```
+
 then push the new branch to remote repository:
 ```git push origin new-branch-name```
 

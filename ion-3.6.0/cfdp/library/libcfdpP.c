@@ -11,6 +11,7 @@
 
 #include "cfdpP.h"
 #include "lyst.h"
+#include "sdr.h"
 
 #ifndef CFDPDEBUG
 #define	CFDPDEBUG	0
@@ -707,7 +708,7 @@ void	_cfdpStop()		/*	Reverses cfdpStart.		*/
 	}
 
 	/*	Stop UTA task.						*/
-	
+
 	if (cfdpvdb->fduSemaphore != SM_SEM_NONE)
 	{
 		sm_SemEnd(cfdpvdb->fduSemaphore);
@@ -1189,7 +1190,7 @@ Object	addEntity(uvast entityId, char *protocolName, char *endpointName,
 	if (entity.inboundFdus == 0 || entityObj == 0
 	|| (elt == 0	?
 		sdr_list_insert_last(sdr, db->entities, entityObj)
-		: 
+		:
 		sdr_list_insert_before(sdr, elt, entityObj)) == 0)
 	{
 		return 0;	/*	System failure.		*/
@@ -1394,7 +1395,7 @@ Object	findInFdu(CfdpTransactionId *transactionId, InFdu *fduBuf,
 				break;
 			}
 		}
-	
+
 		if (foundIt)	/*	FDU is already started.		*/
 		{
 			*fduElt = elt;
@@ -1775,12 +1776,12 @@ static int	missingFileName(char *fileName, int parmNbr,
 	{
 		return 0;
 	}
-	
+
 	resp->status = 1;
 	isprintf(msgBuf, bufLen, "file name %d not provided", parmNbr);
 	return 1;
 }
-			
+
 static void	frCreateFile(char *firstFileName, char *secondFileName,
 			FilestoreResponse *resp, char *msgBuf, int bufLen)
 {
@@ -2239,7 +2240,7 @@ static int	getQualifiedFileName(char *pathNameBuf, int bufLen,
 			*pathNameBuf = '\0';
 			return 0;	/*	Too long.		*/
 		}
- 
+
 		*(pathNameBuf + wdnameLen) = ION_PATH_DELIMITER;
 		wdnameLen++;	/*	wdnamelen including delimiter	*/
 		istrcpy(pathNameBuf + wdnameLen, fileName, bufLen - wdnameLen);
@@ -2269,7 +2270,7 @@ static int	getQualifiedFileName(char *pathNameBuf, int bufLen,
 	size_t	pathNameLen;
 	char	*cursor;
 	char	*lastPathSeparator = NULL;
- 
+
 	pathNameLen = istrlen(pathNameBuf, bufLen);
 	if (pathNameLen > MAXPATHLEN)		/*	Too long.	*/
 	{
@@ -2425,7 +2426,7 @@ static int	constructFinishPdu(InFdu *fdu, CfdpEvent *event)
 
 	/*	Note condition, delivery, file status.			*/
 
-	*cursor = ((event->condition & 0x0f) << 4) 
+	*cursor = ((event->condition & 0x0f) << 4)
 			+ ((event->deliveryCode & 0x01) << 2)
 			+ (event->fileStatus & 0x03);
 	cursor++;
@@ -3206,7 +3207,7 @@ int	cfdpDequeueOutboundPdu(Object *pdu, OutFdu *fduBuffer, FinishPdu *fpdu,
 		}
 
 		/*	ZCO space has now been reserved.		*/
-	
+
 		ionShred(ticket);
 	}
 
@@ -4806,7 +4807,7 @@ int	cfdpHandleInboundPdu(unsigned char *buf, int length)
 	int			result;
 
 #if CFDPDEBUG
-printf("...in cfdpHandleInboundPdu...\n"); 
+printf("...in cfdpHandleInboundPdu...\n");
 #endif
 	CHKERR(buf);
 	memset((char *) &sourceEntityNbr, 0, sizeof(CfdpNumber));
@@ -4847,7 +4848,7 @@ printf("...in cfdpHandleInboundPdu...\n");
 	{
 #if CFDPDEBUG
 printf("...malformed PDU (missing %d bytes)...\n",
-((entityNbrLength << 1) + transactionNbrLength) - bytesRemaining); 
+((entityNbrLength << 1) + transactionNbrLength) - bytesRemaining);
 #endif
 		return 0;		/*	Malformed PDU.		*/
 	}
@@ -4867,7 +4868,7 @@ printf("...malformed PDU (missing %d bytes)...\n",
 	cursor += entityNbrLength;
 	bytesRemaining -= entityNbrLength;
 #if CFDPDEBUG
-printf("...parsed the PDU...\n"); 
+printf("...parsed the PDU...\n");
 #endif
 
 	/*	Check CRC if necessary.					*/
@@ -4875,7 +4876,7 @@ printf("...parsed the PDU...\n");
 	if (crcIsPresent)
 	{
 #if CFDPDEBUG
-printf("...computing CRC...\n"); 
+printf("...computing CRC...\n");
 #endif
 		if (bytesRemaining < 2)
 		{
@@ -4895,7 +4896,7 @@ printf("...computing CRC...\n");
 		if (computedCRC != deliveredCRC)
 		{
 #if CFDPDEBUG
-printf("...CRC validation failed...\n"); 
+printf("...CRC validation failed...\n");
 #endif
 			return 0;	/*	Corrupted PDU.		*/
 		}
@@ -4904,12 +4905,12 @@ printf("...CRC validation failed...\n");
 	/*	PDU is known not to be corrupt, so process it.		*/
 
 #if CFDPDEBUG
-printf("...PDU known not to be corrupt...\n"); 
+printf("...PDU known not to be corrupt...\n");
 #endif
 	if (modeIsUnacknowledged == 0)	/*	Unusable PDU.		*/
 	{
 #if CFDPDEBUG
-printf("...wrong CFDP transmission mode...\n"); 
+printf("...wrong CFDP transmission mode...\n");
 #endif
 		return handleFault(&transactionId,
 				CfdpInvalidTransmissionMode, &handler);
@@ -4932,7 +4933,7 @@ printf("...wrong CFDP transmission mode...\n");
 		if (directiveCode != 5)	/*	Must be Finish.		*/
 		{
 #if CFDPDEBUG
-printf("...PDU type is invalid (must be Finish)...\n"); 
+printf("...PDU type is invalid (must be Finish)...\n");
 #endif
 			return 0;
 		}
@@ -4946,7 +4947,7 @@ printf("...PDU type is invalid (must be Finish)...\n");
 		|| outFduBuf.eofPdu != 0)
 		{
 #if CFDPDEBUG
-printf("...spurious Finish PDU...\n"); 
+printf("...spurious Finish PDU...\n");
 #endif
 			sdr_exit_xn(sdr);
 			return 0;
@@ -4970,7 +4971,7 @@ printf("...spurious Finish PDU...\n");
 			cfdpConstants->ownEntityNbr.buffer, 8) != 0)
 	{
 #if CFDPDEBUG
-printf("...PDU is misdirected...\n"); 
+printf("...PDU is misdirected...\n");
 #endif
 		return 0;		/*	Misdirected PDU.	*/
 	}

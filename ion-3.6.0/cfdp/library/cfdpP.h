@@ -12,6 +12,7 @@
 #include "lyst.h"
 #include "zco.h"
 #include "cfdp.h"
+#include "sdr.h"
 
 #ifndef _CFDPP_H_
 #define _CFDPP_H_
@@ -88,7 +89,7 @@ typedef struct
 typedef struct
 {
 	time_t			deadline;
-	Object			fdu;	
+	Object			fdu;
 } FinishPending;
 
 typedef struct

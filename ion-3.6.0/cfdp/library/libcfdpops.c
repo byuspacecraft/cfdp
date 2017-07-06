@@ -10,6 +10,7 @@
  */
 
 #include "cfdpP.h"
+#include "sdr.h"
 
 extern int		createFDU(CfdpNumber *destinationEntityNbr,
 				unsigned int utParmsLength,
