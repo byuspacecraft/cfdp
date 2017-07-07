@@ -28,7 +28,7 @@ All tags should be annotated tags, and a description should be given to them tha
 * Minor - Features added to the code, but still compatible
 * Patch - Bug fixes, and other minor code changes
 
-_**Note:** Compatibility means your changes do not require changes to other people's code._
+**Note:** Compatibility means your changes do not require changes to other people's code.
 
 _For a more in-depth discussion of version numbering, see http://semver.org/ _
 
@@ -61,7 +61,7 @@ To list all branches:
 ```git branch```
 
 To switch between branches:  
-```git checkout branch-name```
+```git checkout branch-name```  
 *Note: changes need to be committed prior to checking out another branch, otherwise they will be lost!*  
 
 To create a new branch:  
@@ -71,6 +71,11 @@ then checkout that branch:
 then push the new branch to remote repository:  
 ```git push origin new-branch-name```
 
+To view all branches (even ones that are only remote):  
+```git pull```  
+then  
+```git branch -a```  
+
 To tag a commit:  
 ```git tag -a <tag> -m "<tag message>" ```
 
@@ -79,6 +84,10 @@ To list all tags:
 
 To list all tags of a certain type (like version 1):  
 ```git tag -l "v1" ```
+
+To move to a different tag:  
+```git checkout tags/<tag name>```  
+*Note: To change files after checking out a tag, you must move your changes to a new branch. Git will prompt you with how to do this when you checkout a tag*
 
 To solve a merge conflict:  
 ```git mergetool```
