@@ -10,14 +10,36 @@ Git allows the use of branches to separate different threads of work on a projec
 The master branch is where the working and verified code lives. The development branch is where different code portions are tested together, and where it is 'legal' to have untested code. The topic area is a set of branches, each used to fix and test an individual problem or idea.
 
 ### Plan
-Each git repository will consist of a master branch, a development branch, and topic branches. Tags should be made on important commit points, such as the master branch code initially used for engineering unit testing, or the code put on the flight units.
+Each git repository will consist of a master branch, a development branch, and topic branches. Tags should be used to mark important code points, as well as any time code is left on a board. Commit often, and use descriptive commit messages. This will allow us to find the changes we need, without bringing a whole bunch of others along too.
 
-#### General Guidelines
-Commit often, and use descriptive commit messages. This will allow us to find the changes we need, without bringing a whole bunch of others along too.
+#### Tags
+There are two types of tags, version tags and checkpoint tags.
+* Version Tags: Every time code is loaded onto a board, and that code will be left for others to work with, a version tag needs to be added to the commit.
+* Checkpoint Tags: Important moments in the history of the code, such as the code used for the engineering unit or the final code going on the satellite should be tagged with checkpoint tags as well.
+All tags should be annotated tags, and a description should be given to them that specifies what makes them different than previous tags. Example:  
+``` git tag -a c3 -m "Code on PIC-A flight unit" ```
+
+##### Version Tag Format  
+``` vMajor.Minor.Patch ```  
+* v - short for version
+* Major - Big change to the code, incompatible with previous major numbers
+  * **All development level programming should occur at _Major # 0_**
+  * Changes that will require a major number change must be communicated to the whole team
+* Minor - Features added to the code, but still compatible
+* Patch - Bug fixes, and other minor code changes
+
+_**Note:** Compatibility means your changes do not require changes to other people's code._
+
+_For a more in-depth discussion of version numbering, see http://semver.org/ _
+
+##### Checkpoint Tag Format
+``` cNumber ```
+* c - short for Checkpoint
+* Number - increment for each checkpoint we reach
 
 #### Master Branch
 **Branch Name:** master  
-The master branch must always contain verified, working flight code. Boards should be left with master code on them at the end of the day.
+The master branch must always contain verified, working flight code. **Boards should be left with master code on them at the end of a development period, and always at the end of the day.**
 
 #### Development Branch
 **Branch Name:** development  
@@ -40,34 +62,39 @@ To list all branches:
 
 To switch between branches:  
 ```git checkout branch-name```
+*Note: changes need to be committed prior to checking out another branch, otherwise they will be lost!*  
 
 To create a new branch:  
-<<<<<<< HEAD
-``` git branch new-branch-name ```
-
-then checkout that branch:
-```git checkout branch-name```
-
-then push the new branch to remote repository:
-=======
 ``` git branch new-branch-name ```  
 then checkout that branch:  
 ```git checkout branch-name```  
 then push the new branch to remote repository:  
->>>>>>> aa44d0ba574bf395c500e194409672c3f64b10aa
 ```git push origin new-branch-name```
 
 To tag a commit:  
-```git tag -a <tag name> -m "<tag message>" ```
+```git tag -a <tag> -m "<tag message>" ```
 
 To list all tags:  
 ```git tag```
 
+To list all tags of a certain type (like version 1):  
+```git tag -l "v1" ```
+
 To solve a merge conflict:  
 ```git mergetool```
 
-To list commit history:  
-```git log```
+To list commit history and tags:  
+```git log --decorate```
+
+To view the differences in the log:  
+```git log -p -<#>```  
+   The -<#> is the number of previous commits to show.  
+
+To view what files were changed in the commit history:  
+```git log --stat```
+
+To view a nice colored graph of the log:  
+```git log --oneline --abbrev-commit --graph --decorate --color --branches=* --tags=* --all```
 
 To merge a branch into another branch:  
 ```git checkout branch-to-merge-to```  
