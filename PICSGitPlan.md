@@ -69,12 +69,17 @@ To create a new branch:
 then checkout that branch:  
 ```git checkout branch-name```  
 then push the new branch to remote repository:  
-```git push origin new-branch-name```
+```git push origin new-branch-name```  
+then set your branch to track the remote (github) branch:  
+```git -u new-branch-name origin/new-branch-name```
 
 To view all branches (even ones that are only remote):  
 ```git pull```  
 then  
 ```git branch -a```  
+
+To see what branches you are tracking:  
+```git branch -vv```
 
 To tag a commit:  
 ```git tag -a <tag> -m "<tag message>" ```
@@ -82,11 +87,11 @@ To tag a commit:
 To list all tags:  
 ```git tag```
 
-To list all tags of a certain type (like version 1):  
+To list all tags of a certain type (here, v1):  
 ```git tag -l "v1" ```
 
 To move to a different tag:  
-```git checkout tags/<tag name>```  
+```git checkout <tag name>```  
 *Note: To change files after checking out a tag, you must move your changes to a new branch. Git will prompt you with how to do this when you checkout a tag*
 
 To solve a merge conflict:  
